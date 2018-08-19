@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Home</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+
+  <button ion-button color="dark" (click)="scan()">Scan</button>
+  <button ion-button color="dark" (click)="testGet()">Test Get</button>
+  <button ion-button color="dark" (click)="testPost()">Test Post</button>
+  <button ion-button color="dark" (click)="addLocation()">Add Location</button>
+  <button ion-button color="dark" (click)="resetMap()">Reset Map</button>
+
+  <ion-item>
+    <ion-label color="primary">X: </ion-label>
+    <ion-input placeholder="" type="text" value="" [(ngModel)]="locX"></ion-input>
+  </ion-item>
+
+  <ion-item>
+      <ion-label color="primary">Y: </ion-label>
+      <ion-input placeholder="" type="text" value="" [(ngModel)]="locY"></ion-input>
+  </ion-item>
+  
+  <br /><br />
+  
+  <ion-list radio-group>
+    <ion-list-header>
+      Server
+    </ion-list-header>
+  
+    <ion-item>
+      <ion-label>Local</ion-label>
+      <ion-radio (ionSelect)="changeServer('http://localhost:3000')"></ion-radio>
+    </ion-item>
+  
+    <ion-item>
+      <ion-label>Umbler</ion-label>
+      <ion-radio checked="true" (ionSelect)="changeServer('http://ipslib-com.umbler.net')"></ion-radio>
+    </ion-item>
+  </ion-list>
+
+  <br /><br />
+  
+  <label> <b>Logs: </b></label>
+  <span>{{logs}}</span>
+  
+
+</ion-content>
