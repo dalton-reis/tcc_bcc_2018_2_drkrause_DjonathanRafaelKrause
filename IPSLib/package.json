@@ -2,17 +2,19 @@
   "name": "ipslib",
   "version": "1.0.0",
   "description": "",
-  "main": "App.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node App.js"
+    "start": "node server.js"
   },
   "author": "Djonathan Krause",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.3",
+    "connect": "^3.6.6",
     "cors": "^2.8.4",
     "del": "^3.0.0",
     "express": "^4.16.3",
+    "firebase": "^5.4.0",
     "http": "0.0.0",
     "method-override": "^3.0.0",
     "morgan": "^1.9.0"

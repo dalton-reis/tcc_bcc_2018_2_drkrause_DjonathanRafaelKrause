@@ -9,7 +9,7 @@ class Location {
         };
     }
 
-    getCartesianPosition() {
+    getCartesianPosition() {        
         throw new Error('You have to implement the method getCartesianPosition!');
     }
 
@@ -17,5 +17,5 @@ class Location {
         throw new Error('You have to implement the method getGeoPosition!');
     }
 
-}
+} module.exports = Location;
 
