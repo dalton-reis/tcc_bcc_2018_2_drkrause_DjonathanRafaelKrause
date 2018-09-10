@@ -3,13 +3,11 @@ console.log("Starting server...");
 const express = require('express');
 const bodyParser = require('body-parser')
 const app = express();
-var logger = require('morgan');
-var methodOverride = require('method-override')
-var cors = require('cors');
-var firebase = require("firebase");
-var util = require('util') 
-var Map = require('./model/Map');
-
+let logger = require('morgan');
+let methodOverride = require('method-override')
+let cors = require('cors');
+let util = require('util') 
+let Graph = require('./model/Graph');
 
 app.use(logger('dev')); 
 app.use(methodOverride());
@@ -17,51 +15,29 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// Initialize Firebase
-var config = {
-    apiKey: "AIzaSyDmrdJHwZllXploQuqDjuAcDYe9fT-eQTU",
-    authDomain: "ipsdatafirebase.firebaseapp.com",
-    databaseURL: "https://ipsdatafirebase.firebaseio.com",
-    projectId: "ipsdatafirebase",
-    storageBucket: "",
-    messagingSenderId: "425637406328"
-  };
-firebase.initializeApp(config);
+let bot;
 
-let database = firebase.database();
-let readLocations = database.ref('readLocations')
+// set static content
+app.use(express.static('public'));
 
-// Create map
-let map = new Map();
+// Create socket
+let io = require('socket.io').listen(server);
+setInterval(heartbeat, 30);
 
-app.post('/postReadLocation', (req, res) => {
-    let receivedData = JSON.stringify(req.body);
+// This will send bot to all clients
+function heartbeat() {
+    let data = {bot: bot};
+    io.sockets.emit('heartbeat', data);
+}
+  
+// Connection management
+io.sockets.on('connection', (socket) => {
+    console.log("New client: " + socket.id);
 
-    map.addLocation(receivedData);
-    console.log("Data received from device: " + receivedData);
-    try {
-        let readLocationsReturn = readLocations.push(receivedData);
-        res.send("POST SUCCESS: firebase key: " + readLocationsReturn.key);
-    } catch(e) {
-        console.error(e);
-        res.send("ERROR: " + e);
-    }
+    socket.on('start', (data) => {});
+    socket.on('update', (data) => {});
 });
-
-// Test route
-app.get('/testGet/:data', (req, res) => {
-    let receivedData = req.params.data;
-    console.log("get param: " + receivedData);
-
-    try {
-        let readLocationsReturn = readLocations.push(receivedData);
-        res.send("GET SUCCESS: firebase key: " + readLocationsReturn.key);
-    } catch(e) {
-        console.error(e);
-        res.send("ERROR: " + e);
-    }
-});
-
+  
 app.post('/testPost', (req, res) => {
     let receivedData = req.body;
     console.log("post param: " + JSON.stringify(receivedData));
@@ -78,16 +54,9 @@ app.post('/testPost', (req, res) => {
 app.post('/addLocation', (req, res) => {
     let receivedData = req.body;
     console.log("post param: " + JSON.stringify(receivedData));
-    map.addLocation(receivedData);
-    map.show();
     res.send('Location added');
 });
 
-app.post('/resetMap', (req, res) => {
-    map.resetMap();
-    map.show();
-    res.send('Map reseted');
-});
 
 // Main route
 app.get('/', (req, res) => {
@@ -104,3 +73,4 @@ var port = process.env.PORT || 3000;
 app.listen(port, function () {
     console.log('Server listening on port %s', port);
 });
+

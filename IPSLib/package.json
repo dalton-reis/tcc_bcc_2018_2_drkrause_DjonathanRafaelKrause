@@ -17,6 +17,8 @@
     "firebase": "^5.4.0",
     "http": "0.0.0",
     "method-override": "^3.0.0",
-    "morgan": "^1.9.0"
+    "morgan": "^1.9.0",
+    "p5": "^0.6.1",
+    "socket.io": "^2.1.1"
   }
 }
