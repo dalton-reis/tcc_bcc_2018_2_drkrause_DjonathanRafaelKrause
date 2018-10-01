@@ -14,9 +14,8 @@ import 'rxjs/add/operator/map';
 
 export class HomePage {
   scannedData:any = {};
-  url_base = "http://ipslib-com.umbler.net";
+  url_base = "192.168.0.64:3000";
   send_pos = this.url_base + "/sendPosition";
-  test_get = this.url_base + "/testGet";
   test_post = this.url_base + "/testPost";
   reset_map = this.url_base + "/resetMap";
   locX;
@@ -61,7 +60,7 @@ export class HomePage {
   }
 
   sendPos(data) {
-    console.log("Sending data {" + data + "} to URL" + this.send_pos);
+    console.log("Sending data {" + data + "} to URL" + this.url_base + this.send_pos);
     this.http.post(this.test_post, data, {responseType: 'text', headers: new HttpHeaders().set('Content-Type', 'application/json').set('Access-Control-Allow-Origin', '*')})
     .subscribe(res => {
       this.log("Post Success");
@@ -70,17 +69,9 @@ export class HomePage {
     });   
   }
 
-  testGet() {
-    console.log("Sending test data to " + this.test_get);
-    this.http.get(this.test_get + "/testing_get").subscribe(data => {
-      this.logs =  "Enviado";
-      console.log(data);
-    });
-  }
-
   testPost() {
     let testData = `{
-      "message": "Oi fi"
+      "message": "Hello World :D"
     }`;
 
     console.log("Sending test data to " + this.test_post)
@@ -93,17 +84,22 @@ export class HomePage {
   }
 
   addLocation() {
-    if(this.locX == "" || this.locY == "") {
+    this.logs = "";
+    if (this.locX == "" || this.locY == "") {
       this.logs = "Empty x or y";
-    } else if (this.locX < 1 || this.locY < 1) {
+    } 
+    
+    if (this.locX < 1 || this.locY < 1) {
       this.logs = "x or y < 1";
-    } else {
+    } 
+    
+    if (this.logs == "") {
       let testLoc = `{
         "x":` + (this.locX-1) + `,
         "y":` + (this.locY-1) + `,
         "message": "Location"
       }`;
-  
+
       console.log("Sending location to " + this.url_base + "/addLocation")
         this.http.post(this.url_base + "/addLocation", testLoc, {responseType: 'text', headers: new HttpHeaders().set('Content-Type', 'application/json').set('Access-Control-Allow-Origin', '*')})
         .subscribe(res => {
@@ -121,15 +117,6 @@ export class HomePage {
     }, (err) => {
       this.log("Error on reset map! " + err.message);
     });   
-  }
-
-  changeServer(url) {
-    this.url_base = url;
-    this.send_pos = this.url_base + "/sendPosition";
-    this.test_get = this.url_base + "/testGet";
-    this.test_post = this.url_base + "/testPost";
-    this.reset_map = this.url_base + "/resetMap";
-    this.logs = "Server URL changed to: " + url;
   }
 
   log(msg) {
