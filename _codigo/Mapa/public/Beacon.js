@@ -14,4 +14,12 @@ class Beacon {
     ellipse(beacon.pos.x, beacon.pos.y, beacon.r * 10)
     pop();
   }
+
+  setDist (newDist) {
+    if (newDist === null || newDist === undefined) {
+      this.dist = this.dist
+    } else {
+      this.dist = newDist
+    }
+  }
 }
