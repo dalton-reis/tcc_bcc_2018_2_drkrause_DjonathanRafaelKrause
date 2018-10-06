@@ -33,16 +33,11 @@ function setup() {
 function draw() {
   background(255);
   
-  // Pega última posição inserida no servidor
-  //getLastPos()
+  // Pega distância dos beacons inserida no servidor
+  getLastDist()
 
-  eu.pos.x = mouseX
-  eu.pos.y = mouseY
-
-  let pos = getTrilateration(b1.pos, b2.pos, b3.pos)
-  console.log("CALC = x: " + pos.x + " - y:" + pos.y)
-  console.log("REAL = x: " + mouseX + " - y:" + mouseY)
-  console.log("")
+  // Calcula posição atual 
+  eu.pos = getTrilateration(b1, b2, b3)
 
   // Desenha minha posição
   push();
@@ -62,19 +57,19 @@ function draw() {
 }
 
 
-function getTrilateration(position1, position2, position3) {
-  var xa = position1.x;
-  var ya = position1.y;
+function getTrilateration(beacon1, beacon2, beacon3) {
+  var xa = beacon1.pos.x
+  var ya = beacon1.pos.y
   
-  var xb = position2.x;
-  var yb = position2.y;
+  var xb = beacon2.pos.x
+  var yb = beacon2.pos.y
   
-  var xc = position3.x;
-  var yc = position3.y;
+  var xc = beacon3.pos.x
+  var yc = beacon3.pos.y
   
-  var ra = calcDist(xa, ya, mouseX, mouseY)
-  var rb = calcDist(xb, yb, mouseX, mouseY)
-  var rc = calcDist(xc, yc, mouseX, mouseY)
+  var ra = beacon1.dist
+  var rb = beacon2.dist
+  var rc = beacon3.dist
 
   var S = (Math.pow(xc, 2.) - Math.pow(xb, 2.) + Math.pow(yc, 2.) - Math.pow(yb, 2.) + Math.pow(rb, 2.) - Math.pow(rc, 2.)) / 2.0;
   var T = (Math.pow(xa, 2.) - Math.pow(xb, 2.) + Math.pow(ya, 2.) - Math.pow(yb, 2.) + Math.pow(rb, 2.) - Math.pow(ra, 2.)) / 2.0;
@@ -101,24 +96,23 @@ function drawDist(p1, p2) {
   pop();
 }
 
-function getLastPos() {
-  fetch(SERVER + 'get', {
-    method: 'GET',
-    headers:{
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Credentials':true,
-      'Access-Control-Allow-Methods':'POST, GET'
-    }
-  }) 
-  .then((res) => res.json()) 
-  .then((data) => {
-    if (data.dado !== "vazia") {
-      eu.pos.x = data.x
-      eu.pos.y = data.y
-    }
-  })
-  .catch(function(err) { 
-    console.error(err); 
-  });
+function getLastDist() {
+  fetch(SERVER + 'get', { method: 'GET', headers:{ 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Credentials':true, 'Access-Control-Allow-Methods':'POST, GET' } }) 
+    .then((res) => res.json()) 
+    .then((data) => {
+      if (data.beacons !== null) {
+        let br1 = data.beacons.find((beacon) => { return beacon.id === 'b1' })
+        let br2 = data.beacons.find((beacon) => { return beacon.id === 'b2' })
+        let br3 = data.beacons.find((beacon) => { return beacon.id === 'b3' })
+        
+        b1.dist = br1.dist
+        b2.dist = br2.dist
+        b3.dist = br3.dist
+      } else {
+        console.log("Sem mais dados para consumir da fila")
+      }
+    })
+    .catch((err) => { 
+      console.error(err); 
+    });
 }
-

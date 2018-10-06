@@ -4,6 +4,7 @@ class Beacon {
     this.pos = pos
     this.r = r
     this.cor = cor
+    this.dist = 0
   }
 
   show () {
