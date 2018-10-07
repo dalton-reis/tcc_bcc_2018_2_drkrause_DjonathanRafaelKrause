@@ -30,13 +30,15 @@ function setup() {
 
 // Função que fica em loop atualizando a posição no mapa
 function draw() {
-  background(255);
+  background(255)
   
   // Pega distância dos beacons inserida no servidor
   getFromQueue()
+  //noiseTest()
 
   // Calcula posição atual 
   eu.pos = getTrilateration(beaconAmarelo, beaconRosa, beaconRoxo)
+  console.log(eu.pos)
 
   // Desenha minha posição
   push();

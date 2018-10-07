@@ -29,3 +29,11 @@ function transformData(data) {
   beaconRoxo.setDist(brRoxo.dist)
 }
 
+let xoff = 0.0
+function noiseTest() {
+  xoff = xoff + 0.01
+  beaconAmarelo.dist = noise(xoff) * 400
+  beaconRosa.dist = noise(xoff) * 600
+  beaconRoxo.dist = noise(xoff) * 800
+}
+
