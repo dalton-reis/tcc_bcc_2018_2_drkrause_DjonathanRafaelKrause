@@ -1,6 +1,5 @@
-module.exports = class Fila {
+module.exports = class Queue {
   constructor () {
-    console.log("Criando fila")
     this.dados = []
   }
 
@@ -8,7 +7,7 @@ module.exports = class Fila {
     this.dados.push(dado)
   }
 
-  get () {
+  remove () {
     if (!this.empty()) {
       return this.dados.shift()
     } else {
@@ -16,12 +15,8 @@ module.exports = class Fila {
     }
   }
 
-  getAll () {
-    if (!this.empty()) {
-      return this.dados
-    } else {
-      return null
-    }
+  show () {
+    return this.dados
   }
 
   empty () {
