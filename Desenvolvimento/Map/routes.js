@@ -10,16 +10,15 @@ module.exports = function (app) {
   })
 
   // add lista de beacons na fila
-  app.get('/addAll/:data', (req, res) => {
-    console.log("CHEGOU REQUEST: " + req.params.data)
-    res.send({ msg: 'inserido' })
+  app.post('/addAll', (req, res) => {
+    if (req.body !== undefined && req.body !== null) {
+      queue.addAll(req.body)
+      res.send({ msg: 'dados inseridos' })
+    } else {
+      res.send({ msg: 'nenhum para inserir' })
+    }
   })
 
-  app.post('/postAll', (req, res) => {
-    console.log("CHEGOU REQUEST: " + req.params.data)
-    res.send({ msg: 'inserido' })
-  })
-  
   // Remove o primeiro dado da fila
   app.get('/remove', (req, res) => {
     let data = queue.remove()
@@ -27,7 +26,7 @@ module.exports = function (app) {
     if (data) {
       res.send(data);
     } else {
-      res.send({ beacons: null })
+      res.send({})
     }
   })
 

@@ -1,10 +1,12 @@
 class Beacon {
-  constructor (id, pos, r, color) {
+  constructor (id, pos, r, color, name) {
     this.id = id
     this.pos = pos
     this.r = r
     this.color = color
-    this.dist = 0
+    this.rssi = 0
+    this.dist = 0 // em centímetros 
+    this.name = name
   }
 
   show () {
@@ -15,11 +17,9 @@ class Beacon {
     pop();
   }
 
-  setDist (newDist) {
-    if (newDist === null || newDist === undefined) {
-      this.dist = this.dist
-    } else {
-      this.dist = newDist
+  setRSSI (newRSSI) {
+    if (newRSSI !== null && newRSSI !== undefined) {
+      this.rssi = newRSSI
     }
   }
 }

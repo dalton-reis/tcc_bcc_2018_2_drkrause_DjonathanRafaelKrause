@@ -4,7 +4,8 @@ function removeFromQueue() {
   fetch(SERVER + 'remove', { method: 'GET', headers:{ 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Credentials':true, 'Access-Control-Allow-Methods':'POST, GET' } }) 
     .then((res) => res.json()) 
     .then((data) => {
-      if (data.beacons !== null) {
+      //if (data !== null && data !== undefined && data != {}) {
+      if (!isEmptyObject(data)) {
         return transformData(data)
       } else {
         console.log("Sem mais dados para consumir da fila")
@@ -15,31 +16,35 @@ function removeFromQueue() {
     });
 }
 
-// Seta as informações atualizadas dos beacons
 function transformData(data) {
   // Seta beacon recebido de acordo com o id
-  let brAmarelo = data.beacons.find((beacon) => { return beacon.id === 'beacon_amarelo' })
-  let brRosa = data.beacons.find((beacon) => { return beacon.id === 'beacon_rosa' })
-  let brRoxo = data.beacons.find((beacon) => { return beacon.id === 'beacon_roxo' })
+  let brAmarelo = {}, brRosa = {}, brRoxo = {}
+  if (data.id === "D7:80:45:7D:C8:86") {
+    brAmarelo = data
+  } else if (data.id === 'F8:15:B1:06:9B:71') {
+    brRosa = data
+  } else if (data.id === 'CF:43:E0:FA:CE:D2') {
+    brRoxo = data
+  }
 
-  /* Normaliza os dados : zi = xi - min(x) / max(x) - min(x)
-  brAmarelo.dist = ((brAmarelo.dist - 0) / (width - 0)) * 100
-  brRosa.dist = ((brRosa.dist - 0) / (width - 0)) * 100
-  brRoxo.dist = ((brRoxo.dist - 0) / (width - 0)) * 100
-  console.log(brAmarelo.dist + " - " + brRosa.dist + " - " + brRoxo.dist)*/
+  brAmarelo.id = 'beacon_amarelo'
+  brRosa.id = 'beacon_rosa'
+  brRoxo.id = 'beacon_roxo'
 
+  // Atualiza RSSI dos beacons
+  lemonBeacon.setRSSI(brAmarelo.rssi)
+  candyBeacon.setRSSI(brRosa.rssi)
+  beetrootBeacon.setRSSI(brRoxo.rssi)
+  
   // Seta distância do beacon recebido na referência do mapa
-  lemonBeacon.setDist(brAmarelo.dist)
-  candyBeacon.setDist(brRosa.dist)
-  beetrootBeacon.setDist(brRoxo.dist)
+  lemonBeacon.dist = calcDistRSSI(lemonBeacon.rssi)
+  candyBeacon.dist = calcDistRSSI(candyBeacon.rssi)
+  beetrootBeacon.dist = calcDistRSSI(beetrootBeacon.rssi)
+
+  console.log(lemonBeacon.dist)
+
 }
 
-// Teste de visualização com perlin noise
-let xoff = 0.0
-function noiseTest() {
-  xoff = xoff + 0.01
-  lemonBeacon.dist = noise(xoff) * 400
-  candyBeacon.dist = noise(xoff) * 600
-  beetrootBeacon.dist = noise(xoff) * 800
+function isEmptyObject(obj) {
+  return !Object.keys(obj).length;
 }
-

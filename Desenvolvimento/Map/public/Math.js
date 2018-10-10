@@ -40,20 +40,44 @@ function getTrilateration(beacon1, beacon2, beacon3) {
  * @returns Distância entre p1 e p2
  */
 function calcDist(x1, y1, x2, y2) {
-  let a = (x2 - x1) * (x2 - x1);
-  let b = (y2 - y1) * (y2 - y1);
-  return sqrt(a + b);
+  // Normaliza os dados : zi = xi - min(x) / max(x) - min(x)
+  let a = (x2 - x1) * (x2 - x1)
+  let b = (y2 - y1) * (y2 - y1)
+  
+  return sqrt(a + b)
 }
 
+/**
+ * Calcula a distância de acordo com o RSSI recebido
+ * https://stackoverflow.com/questions/20416218/understanding-ibeacon-distancing/20434019#20434019
+ * https://www.quora.com/How-do-I-calculate-distance-in-meters-km-yards-from-rssi-values-in-dBm-of-BLE-in-android
+ */
+function calcDistRSSI(rssi) {
+  let txPower = ONE_METER_RSSI
+  let ratio = rssi*1.0 / txPower
+
+  if (rssi == 0) {
+    return -1.0
+  }
+
+  if (ratio < 1.0) {
+    return Math.pow(ratio, 10)
+  } else {
+    return (0.89976) * Math.pow(ratio, 7.7095) + 0.111
+  }
+}
+ 
 /**
  * Desenha distância entre p1 e p2
  */
 function drawDist(p1, p2) {
   let d = calcDist(p1.x, p1.y, p2.x, p2.y);
+  d = map(d, 0, width, 0, MAX_REAL_WORLD_DIST)
+
   push();
   stroke(1);
   translate((p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
   rotate(atan2(p2.y - p1.y, p2.x - p1.x));
-  text(nfc(d, 1), 0, -5);
+  text(nfc(d, 2) + ' cm', 0, -5);
   pop();
 }
