@@ -30,13 +30,13 @@ module.exports = function (app) {
     }
   })
 
-  // Rota para limpar fila
+  // Limpa fila
   app.get('/reset', (req, res) => {
     queue.reset()
     res.send({ msg: 'resetada' })
   })
   
-  // Rota para pegar todos os dados da queue (nao remove)
+  // Mostra todos os dados da queue (nao remove)
   app.get('/show', (req, res) => {
     let data = queue.show()
   
@@ -46,231 +46,36 @@ module.exports = function (app) {
       res.send({ queue: null })
     }
   })
-  
-  // Rota para inserir dados de teste na queue
-  app.get('/test', (req, res) => {
-    for (let i = 1; i < 100; i++) {
-      let b = [
-        {
-          id: 'beacon_amarelo',
-          dist: i * 3.4
-        },
-        {
-          id: 'beacon_rosa',
-          dist: i * 12.5
-        },
-        {
-          id: 'beacon_roxo',
-          dist: i * 2.7
-        }
-      ]
-      queue.add({ beacons: b })
+
+  // Insere dados de teste
+  app.get('/testData', (req, res) => {
+    let min = 80
+    let max = 86
+
+    for(let i = 0; i < 500; i++) {
+      let randomRSSI = (Math.floor(Math.random() * (max - min + 1)) + min) * -1
+      queue.add(testBeacon = {
+        id: 'D7:80:45:7D:C8:86', // beacon_amarelo
+        rssi: randomRSSI
+      })
+
+      randomRSSI = (Math.floor(Math.random() * (max - min + 1)) + min) * -1
+      queue.add(testBeacon = {
+        id: 'F8:15:B1:06:9B:71', 
+        rssi: randomRSSI
+      })
+
+      randomRSSI = (Math.floor(Math.random() * (max - min + 1)) + min) * -1
+      queue.add(testBeacon = {
+        id: 'CF:43:E0:FA:CE:D2', 
+        rssi: randomRSSI
+      })
     }
-    res.send(queue.show())
+
+    res.send({ queue: queue.show() })
   })
 
-  app.get('/testRealData', (req, res) => {
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 91 }, { id: "beacon_rosa", dist: 90 }, { id: "beacon_roxo", dist: 87} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 85 }, { id: "beacon_rosa", dist: 90 }, { id: "beacon_roxo", dist: 87} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 88 }, { id: "beacon_roxo", dist: 85} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 86 }, { id: "beacon_roxo", dist: 86} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 89 }, { id: "beacon_roxo", dist: 90 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 91 }, { id: "beacon_roxo", dist: 91} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 92 }, { id: "beacon_rosa", dist: 86 }, { id: "beacon_roxo", dist: 91} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 89 }, { id: "beacon_rosa", dist: 90 }, { id: "beacon_roxo", dist: 90} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 92 }, { id: "beacon_roxo", dist: 85} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 86 }, { id: "beacon_rosa", dist: 90 }, { id: "beacon_roxo", dist: 92 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 86 }, { id: "beacon_rosa", dist: 90 }, { id: "beacon_roxo", dist: 92} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 86 }, { id: "beacon_rosa", dist: 87 }, { id: "beacon_roxo", dist: 90} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 85 }, { id: "beacon_rosa", dist: 85 }, { id: "beacon_roxo", dist: 90} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 90 }, { id: "beacon_rosa", dist: 86 }, { id: "beacon_roxo", dist: 85} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 86 }, { id: "beacon_rosa", dist: 91 }, { id: "beacon_roxo", dist: 88 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 90 }, { id: "beacon_roxo", dist: 88} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 92 }, { id: "beacon_rosa", dist: 85 }, { id: "beacon_roxo", dist: 88} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 92 }, { id: "beacon_rosa", dist: 92 }, { id: "beacon_roxo", dist: 91} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 85 }, { id: "beacon_roxo", dist: 85} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 92 }, { id: "beacon_rosa", dist: 91 }, { id: "beacon_roxo", dist: 85 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 90 }, { id: "beacon_rosa", dist: 89 }, { id: "beacon_roxo", dist: 87} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 92 }, { id: "beacon_rosa", dist: 91 }, { id: "beacon_roxo", dist: 87} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 85 }, { id: "beacon_rosa", dist: 89 }, { id: "beacon_roxo", dist: 85} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 86 }, { id: "beacon_rosa", dist: 90 }, { id: "beacon_roxo", dist: 92} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 92 }, { id: "beacon_rosa", dist: 87 }, { id: "beacon_roxo", dist: 87 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 92 }, { id: "beacon_rosa", dist: 88 }, { id: "beacon_roxo", dist: 88} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 90 }, { id: "beacon_rosa", dist: 91 }, { id: "beacon_roxo", dist: 87} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 86 }, { id: "beacon_rosa", dist: 86 }, { id: "beacon_roxo", dist: 90} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 85 }, { id: "beacon_roxo", dist: 85} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 90 }, { id: "beacon_rosa", dist: 86 }, { id: "beacon_roxo", dist: 90 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 89 }, { id: "beacon_rosa", dist: 88 }, { id: "beacon_roxo", dist: 90} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 91 }, { id: "beacon_rosa", dist: 90 }, { id: "beacon_roxo", dist: 86} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 91 }, { id: "beacon_rosa", dist: 91 }, { id: "beacon_roxo", dist: 85} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 87 }, { id: "beacon_rosa", dist: 90 }, { id: "beacon_roxo", dist: 87} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 90 }, { id: "beacon_roxo", dist: 86 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 86 }, { id: "beacon_rosa", dist: 89 }, { id: "beacon_roxo", dist: 90} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 90 }, { id: "beacon_rosa", dist: 87 }, { id: "beacon_roxo", dist: 89} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 85 }, { id: "beacon_rosa", dist: 88 }, { id: "beacon_roxo", dist: 92} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 87 }, { id: "beacon_rosa", dist: 85 }, { id: "beacon_roxo", dist: 85} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 85 }, { id: "beacon_rosa", dist: 88 }, { id: "beacon_roxo", dist: 90 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 85 }, { id: "beacon_rosa", dist: 88 }, { id: "beacon_roxo", dist: 90} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 86 }, { id: "beacon_rosa", dist: 87 }, { id: "beacon_roxo", dist: 90} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 91 }, { id: "beacon_rosa", dist: 86 }, { id: "beacon_roxo", dist: 92} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 90 }, { id: "beacon_rosa", dist: 90 }, { id: "beacon_roxo", dist: 89} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 86 }, { id: "beacon_rosa", dist: 87 }, { id: "beacon_roxo", dist: 87 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 87 }, { id: "beacon_rosa", dist: 87 }, { id: "beacon_roxo", dist: 90} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 90 }, { id: "beacon_rosa", dist: 87 }, { id: "beacon_roxo", dist: 86} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 90 }, { id: "beacon_rosa", dist: 86 }, { id: "beacon_roxo", dist: 88} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 90 }, { id: "beacon_rosa", dist: 86 }, { id: "beacon_roxo", dist: 89} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 87 }, { id: "beacon_roxo", dist: 92 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 91 }, { id: "beacon_rosa", dist: 87 }, { id: "beacon_roxo", dist: 87} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 87 }, { id: "beacon_rosa", dist: 92 }, { id: "beacon_roxo", dist: 89} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 86 }, { id: "beacon_rosa", dist: 87 }, { id: "beacon_roxo", dist: 86} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 90 }, { id: "beacon_rosa", dist: 92 }, { id: "beacon_roxo", dist: 86} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 91 }, { id: "beacon_rosa", dist: 88 }, { id: "beacon_roxo", dist: 90 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 86 }, { id: "beacon_roxo", dist: 87} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 91 }, { id: "beacon_roxo", dist: 89} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 85 }, { id: "beacon_rosa", dist: 91 }, { id: "beacon_roxo", dist: 85} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 86 }, { id: "beacon_rosa", dist: 92 }, { id: "beacon_roxo", dist: 92} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 92 }, { id: "beacon_rosa", dist: 90 }, { id: "beacon_roxo", dist: 86 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 89 }, { id: "beacon_rosa", dist: 87 }, { id: "beacon_roxo", dist: 92} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 91 }, { id: "beacon_rosa", dist: 88 }, { id: "beacon_roxo", dist: 87} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 86 }, { id: "beacon_roxo", dist: 90} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 87 }, { id: "beacon_rosa", dist: 85 }, { id: "beacon_roxo", dist: 86} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 87 }, { id: "beacon_rosa", dist: 87 }, { id: "beacon_roxo", dist: 90 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 86 }, { id: "beacon_rosa", dist: 91 }, { id: "beacon_roxo", dist: 91} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 86 }, { id: "beacon_rosa", dist: 92 }, { id: "beacon_roxo", dist: 91} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 86 }, { id: "beacon_rosa", dist: 91 }, { id: "beacon_roxo", dist: 88} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 86 }, { id: "beacon_rosa", dist: 86 }, { id: "beacon_roxo", dist: 91} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 86 }, { id: "beacon_rosa", dist: 88 }, { id: "beacon_roxo", dist: 85 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 87 }, { id: "beacon_roxo", dist: 90} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 87 }, { id: "beacon_rosa", dist: 87 }, { id: "beacon_roxo", dist: 89} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 86 }, { id: "beacon_rosa", dist: 85 }, { id: "beacon_roxo", dist: 86} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 89 }, { id: "beacon_roxo", dist: 88} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 86 }, { id: "beacon_rosa", dist: 87 }, { id: "beacon_roxo", dist: 90 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 86 }, { id: "beacon_rosa", dist: 86 }, { id: "beacon_roxo", dist: 86} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 87 }, { id: "beacon_rosa", dist: 91 }, { id: "beacon_roxo", dist: 87} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 89 }, { id: "beacon_roxo", dist: 92} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 92 }, { id: "beacon_rosa", dist: 89 }, { id: "beacon_roxo", dist: 88} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 85 }, { id: "beacon_rosa", dist: 92 }, { id: "beacon_roxo", dist: 85 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 86 }, { id: "beacon_rosa", dist: 85 }, { id: "beacon_roxo", dist: 91} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 87 }, { id: "beacon_roxo", dist: 90} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 87 }, { id: "beacon_rosa", dist: 92 }, { id: "beacon_roxo", dist: 88} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 85 }, { id: "beacon_rosa", dist: 89 }, { id: "beacon_roxo", dist: 87} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 87 }, { id: "beacon_rosa", dist: 92 }, { id: "beacon_roxo", dist: 92 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 87 }, { id: "beacon_rosa", dist: 86 }, { id: "beacon_roxo", dist: 91} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 85 }, { id: "beacon_rosa", dist: 90 }, { id: "beacon_roxo", dist: 87} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 92 }, { id: "beacon_rosa", dist: 87 }, { id: "beacon_roxo", dist: 88} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 92 }, { id: "beacon_rosa", dist: 91 }, { id: "beacon_roxo", dist: 86} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 86 }, { id: "beacon_rosa", dist: 87 }, { id: "beacon_roxo", dist: 92 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 86 }, { id: "beacon_rosa", dist: 90 }, { id: "beacon_roxo", dist: 89} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 86 }, { id: "beacon_rosa", dist: 87 }, { id: "beacon_roxo", dist: 90} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 90 }, { id: "beacon_rosa", dist: 90 }, { id: "beacon_roxo", dist: 87} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 88 }, { id: "beacon_roxo", dist: 86} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 87 }, { id: "beacon_rosa", dist: 91 }, { id: "beacon_roxo", dist: 85 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 87 }, { id: "beacon_rosa", dist: 91 }, { id: "beacon_roxo", dist: 91} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 89 }, { id: "beacon_rosa", dist: 90 }, { id: "beacon_roxo", dist: 88} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 90 }, { id: "beacon_rosa", dist: 90 }, { id: "beacon_roxo", dist: 88} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 90 }, { id: "beacon_rosa", dist: 85 }, { id: "beacon_roxo", dist: 88} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 89 }, { id: "beacon_rosa", dist: 89 }, { id: "beacon_roxo", dist: 85 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 89 }, { id: "beacon_roxo", dist: 86} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 87 }, { id: "beacon_rosa", dist: 90 }, { id: "beacon_roxo", dist: 92} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 90 }, { id: "beacon_rosa", dist: 90 }, { id: "beacon_roxo", dist: 90} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 89 }, { id: "beacon_rosa", dist: 90 }, { id: "beacon_roxo", dist: 88} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 91 }, { id: "beacon_roxo", dist: 86 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 87 }, { id: "beacon_rosa", dist: 87 }, { id: "beacon_roxo", dist: 87} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 92 }, { id: "beacon_rosa", dist: 90 }, { id: "beacon_roxo", dist: 90} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 87 }, { id: "beacon_rosa", dist: 86 }, { id: "beacon_roxo", dist: 89} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 86 }, { id: "beacon_rosa", dist: 87 }, { id: "beacon_roxo", dist: 89} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 87 }, { id: "beacon_rosa", dist: 91 }, { id: "beacon_roxo", dist: 91 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 87 }, { id: "beacon_rosa", dist: 91 }, { id: "beacon_roxo", dist: 85} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 91 }, { id: "beacon_rosa", dist: 92 }, { id: "beacon_roxo", dist: 85} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 85 }, { id: "beacon_rosa", dist: 89 }, { id: "beacon_roxo", dist: 86} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 89 }, { id: "beacon_rosa", dist: 89 }, { id: "beacon_roxo", dist: 91} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 86 }, { id: "beacon_rosa", dist: 89 }, { id: "beacon_roxo", dist: 88 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 86 }, { id: "beacon_rosa", dist: 85 }, { id: "beacon_roxo", dist: 92} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 92 }, { id: "beacon_roxo", dist: 85} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 85 }, { id: "beacon_rosa", dist: 89 }, { id: "beacon_roxo", dist: 86} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 90 }, { id: "beacon_roxo", dist: 87} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 85 }, { id: "beacon_rosa", dist: 85 }, { id: "beacon_roxo", dist: 86 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 89 }, { id: "beacon_roxo", dist: 92} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 91 }, { id: "beacon_rosa", dist: 89 }, { id: "beacon_roxo", dist: 87} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 90 }, { id: "beacon_rosa", dist: 89 }, { id: "beacon_roxo", dist: 92} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 87 }, { id: "beacon_rosa", dist: 89 }, { id: "beacon_roxo", dist: 92} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 85 }, { id: "beacon_rosa", dist: 91 }, { id: "beacon_roxo", dist: 90 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 90 }, { id: "beacon_rosa", dist: 92 }, { id: "beacon_roxo", dist: 92} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 92 }, { id: "beacon_rosa", dist: 91 }, { id: "beacon_roxo", dist: 89} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 89 }, { id: "beacon_rosa", dist: 90 }, { id: "beacon_roxo", dist: 89} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 85 }, { id: "beacon_rosa", dist: 85 }, { id: "beacon_roxo", dist: 88} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 87 }, { id: "beacon_rosa", dist: 88 }, { id: "beacon_roxo", dist: 86 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 85 }, { id: "beacon_rosa", dist: 88 }, { id: "beacon_roxo", dist: 86} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 86 }, { id: "beacon_rosa", dist: 87 }, { id: "beacon_roxo", dist: 86} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 87 }, { id: "beacon_rosa", dist: 87 }, { id: "beacon_roxo", dist: 88} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 91 }, { id: "beacon_roxo", dist: 92} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 91 }, { id: "beacon_rosa", dist: 92 }, { id: "beacon_roxo", dist: 91 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 86 }, { id: "beacon_roxo", dist: 91} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 91 }, { id: "beacon_rosa", dist: 91 }, { id: "beacon_roxo", dist: 89} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 85 }, { id: "beacon_rosa", dist: 87 }, { id: "beacon_roxo", dist: 86} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 92 }, { id: "beacon_rosa", dist: 86 }, { id: "beacon_roxo", dist: 87} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 87 }, { id: "beacon_rosa", dist: 88 }, { id: "beacon_roxo", dist: 88 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 85 }, { id: "beacon_rosa", dist: 89 }, { id: "beacon_roxo", dist: 92} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 90 }, { id: "beacon_roxo", dist: 85} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 92 }, { id: "beacon_rosa", dist: 90 }, { id: "beacon_roxo", dist: 90} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 90 }, { id: "beacon_rosa", dist: 87 }, { id: "beacon_roxo", dist: 86} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 90 }, { id: "beacon_rosa", dist: 90 }, { id: "beacon_roxo", dist: 89 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 91 }, { id: "beacon_roxo", dist: 88} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 91 }, { id: "beacon_rosa", dist: 86 }, { id: "beacon_roxo", dist: 91} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 89 }, { id: "beacon_rosa", dist: 86 }, { id: "beacon_roxo", dist: 92} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 89 }, { id: "beacon_rosa", dist: 88 }, { id: "beacon_roxo", dist: 91} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 89 }, { id: "beacon_rosa", dist: 88 }, { id: "beacon_roxo", dist: 89 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 86 }, { id: "beacon_rosa", dist: 86 }, { id: "beacon_roxo", dist: 85} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 87 }, { id: "beacon_rosa", dist: 86 }, { id: "beacon_roxo", dist: 89} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 90 }, { id: "beacon_rosa", dist: 87 }, { id: "beacon_roxo", dist: 90} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 87 }, { id: "beacon_rosa", dist: 92 }, { id: "beacon_roxo", dist: 89} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 89 }, { id: "beacon_roxo", dist: 90 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 85 }, { id: "beacon_rosa", dist: 87 }, { id: "beacon_roxo", dist: 91} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 90 }, { id: "beacon_rosa", dist: 88 }, { id: "beacon_roxo", dist: 88} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 85 }, { id: "beacon_rosa", dist: 85 }, { id: "beacon_roxo", dist: 90} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 91 }, { id: "beacon_rosa", dist: 87 }, { id: "beacon_roxo", dist: 88} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 86 }, { id: "beacon_rosa", dist: 85 }, { id: "beacon_roxo", dist: 85 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 86 }, { id: "beacon_rosa", dist: 87 }, { id: "beacon_roxo", dist: 87} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 91 }, { id: "beacon_rosa", dist: 90 }, { id: "beacon_roxo", dist: 87} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 85 }, { id: "beacon_rosa", dist: 86 }, { id: "beacon_roxo", dist: 89} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 89 }, { id: "beacon_roxo", dist: 85} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 85 }, { id: "beacon_rosa", dist: 88 }, { id: "beacon_roxo", dist: 87 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 90 }, { id: "beacon_rosa", dist: 90 }, { id: "beacon_roxo", dist: 88 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 86 }, { id: "beacon_rosa", dist: 87 }, { id: "beacon_roxo", dist: 88} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 87 }, { id: "beacon_roxo", dist: 92} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 91 }, { id: "beacon_rosa", dist: 90 }, { id: "beacon_roxo", dist: 87} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 85 }, { id: "beacon_rosa", dist: 90 }, { id: "beacon_roxo", dist: 92 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 91 }, { id: "beacon_rosa", dist: 91 }, { id: "beacon_roxo", dist: 88 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 91 }, { id: "beacon_rosa", dist: 89 }, { id: "beacon_roxo", dist: 87} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 91 }, { id: "beacon_rosa", dist: 90 }, { id: "beacon_roxo", dist: 92} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 90 }, { id: "beacon_rosa", dist: 88 }, { id: "beacon_roxo", dist: 91} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 91 }, { id: "beacon_roxo", dist: 88 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 90 }, { id: "beacon_rosa", dist: 85 }, { id: "beacon_roxo", dist: 88 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 87 }, { id: "beacon_rosa", dist: 87 }, { id: "beacon_roxo", dist: 90} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 87 }, { id: "beacon_rosa", dist: 91 }, { id: "beacon_roxo", dist: 89} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 91 }, { id: "beacon_rosa", dist: 90 }, { id: "beacon_roxo", dist: 88} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 92 }, { id: "beacon_rosa", dist: 90 }, { id: "beacon_roxo", dist: 86 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 87 }, { id: "beacon_rosa", dist: 86 }, { id: "beacon_roxo", dist: 90 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 86 }, { id: "beacon_rosa", dist: 90 }, { id: "beacon_roxo", dist: 90} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 87 }, { id: "beacon_rosa", dist: 88 }, { id: "beacon_roxo", dist: 89} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 85 }, { id: "beacon_rosa", dist: 92 }, { id: "beacon_roxo", dist: 89} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 88 }, { id: "beacon_roxo", dist: 85 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 89 }, { id: "beacon_rosa", dist: 91 }, { id: "beacon_roxo", dist: 90 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 86 }, { id: "beacon_rosa", dist: 90 }, { id: "beacon_roxo", dist: 88} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 91 }, { id: "beacon_rosa", dist: 87 }, { id: "beacon_roxo", dist: 87} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 86 }, { id: "beacon_roxo", dist: 90} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 89 }, { id: "beacon_roxo", dist: 85 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 87 }, { id: "beacon_rosa", dist: 89 }, { id: "beacon_roxo", dist: 90 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 89 }, { id: "beacon_roxo", dist: 92} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 89 }, { id: "beacon_rosa", dist: 86 }, { id: "beacon_roxo", dist: 87} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 85 }, { id: "beacon_rosa", dist: 92 }, { id: "beacon_roxo", dist: 85} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 92 }, { id: "beacon_rosa", dist: 86 }, { id: "beacon_roxo", dist: 92 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 86 }, { id: "beacon_rosa", dist: 91 }, { id: "beacon_roxo", dist: 86 } ]})
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 85 }, { id: "beacon_rosa", dist: 85 }, { id: "beacon_roxo", dist: 88} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 91 }, { id: "beacon_roxo", dist: 92} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 88 }, { id: "beacon_rosa", dist: 88 }, { id: "beacon_roxo", dist: 87} ] })
-    queue.add({ beacons: [{ id: "beacon_amarelo", dist: 87 }, { id: "beacon_rosa", dist: 92 }, { id: "beacon_roxo", dist: 86 } ]})
-    res.send(queue.show())
-})
+
+
 
 }

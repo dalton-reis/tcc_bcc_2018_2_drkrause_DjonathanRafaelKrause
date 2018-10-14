@@ -1,12 +1,13 @@
 class Beacon {
-  constructor (id, pos, r, color, name) {
+  constructor (id, pos, r, color, name, txPower) {
     this.id = id
     this.pos = pos
     this.r = r
     this.color = color
-    this.rssi = 0
-    this.dist = 0 // em centímetros 
+    this.rssi = txPower // Começa com o txPower para não ser 0
+    this.dist = 0 
     this.name = name
+    this.txPower = txPower // RSSI médio a 1m
   }
 
   show () {
@@ -18,7 +19,7 @@ class Beacon {
   }
 
   setRSSI (newRSSI) {
-    if (newRSSI !== null && newRSSI !== undefined) {
+    if (!isEmpty(newRSSI)) {
       this.rssi = newRSSI
     }
   }
