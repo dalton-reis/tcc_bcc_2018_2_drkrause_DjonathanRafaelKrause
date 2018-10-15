@@ -8,6 +8,9 @@ class Beacon {
     this.dist = 0 
     this.name = name
     this.txPower = txPower // RSSI médio a 1m
+    this.motionAvgFilter = new MotionAvgFilter(50)
+
+    this.normPos = createVector(normalize(this.pos.x), normalize(this.pos.y))
   }
 
   show () {
@@ -20,7 +23,9 @@ class Beacon {
 
   setRSSI (newRSSI) {
     if (!isEmpty(newRSSI)) {
-      this.rssi = newRSSI
+      this.motionAvgFilter.step(newRSSI)
+      this.rssi = this.motionAvgFilter.currentState()
+      //console.log("FILTRADO: " + this.rssi + " | RECEBIDO: " + newRSSI) 
     }
   }
 }

@@ -21,19 +21,6 @@ function getTrilateration(beacon1, beacon2, beacon3) {
   let rb = beacon2.dist
   let rc = beacon3.dist
 
-  /*
-  xa = map(xa, 0, width, 0, MAX_REAL_WORLD_DIST)
-  ya = map(ya, 0, width, 0, MAX_REAL_WORLD_DIST)
-  xb = map(xb, 0, width, 0, MAX_REAL_WORLD_DIST)
-  yb = map(yb, 0, width, 0, MAX_REAL_WORLD_DIST)
-  xc = map(xc, 0, width, 0, MAX_REAL_WORLD_DIST)
-  yc = map(yc, 0, width, 0, MAX_REAL_WORLD_DIST)
-  ra = map(ra, 0, width, 0, MAX_REAL_WORLD_DIST)
-  rb = map(ra, 0, width, 0, MAX_REAL_WORLD_DIST)
-  rc = map(ra, 0, width, 0, MAX_REAL_WORLD_DIST)
-  */
-
-
   // Faz a mágica
   let S = (Math.pow(xc, 2.) - Math.pow(xb, 2.) + Math.pow(yc, 2.) - Math.pow(yb, 2.) + Math.pow(rb, 2.) - Math.pow(rc, 2.)) / 2.0;
   let T = (Math.pow(xa, 2.) - Math.pow(xb, 2.) + Math.pow(ya, 2.) - Math.pow(yb, 2.) + Math.pow(rb, 2.) - Math.pow(ra, 2.)) / 2.0;
@@ -82,10 +69,10 @@ function calcDistRSSI(beacon) {
 }
 
 /**
- * Normaliza a distância calculada
+ * Normalização
  */
-function normDist(dist) {
-  return map(dist, 0, width, 0, MAX_REAL_WORLD_DIST)
+function normalize(value) {
+  return map(value, 0, width, 0, MAX_REAL_WORLD_DIST)
 }
  
 /**

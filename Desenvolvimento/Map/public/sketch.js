@@ -14,6 +14,7 @@ function setup() {
   candyBeacon = new Beacon('F8:15:B1:06:9B:71', createVector(550, 50), 4, CANDY_COLOR, 'beacon_rosa', -88.741)
   beetrootBeacon = new Beacon('CF:43:E0:FA:CE:D2', createVector(550, 550), 4, BEETROOT_COLOR, 'beacon_roxo', -83.657)
 
+
   beacons.push(lemonBeacon);
   beacons.push(candyBeacon);
   beacons.push(beetrootBeacon);
@@ -56,10 +57,18 @@ function updateBeacons() {
 	for(beacon of beacons) {
     let p1 = me.pos
     let p2 = beacon.pos
-    
+    beacon.dist = calcDistRSSI(beacon) * 100
+
     drawDist(p1, p2, beacon.dist)
     line(beacon.pos.x, beacon.pos.y, me.pos.x, me.pos.y)
     beacon.show()
+    
+    // Desenha a minha posição aqui pra não dar delay com o desenho da linha 
+    push();
+    noStroke();
+    fill(me.color);
+    ellipse(me.pos.x, me.pos.y, 30);
+    pop();
   }
 }
 
@@ -68,9 +77,4 @@ function updateBeacons() {
  */
 function updateMe() {
   me.pos = getTrilateration(lemonBeacon, candyBeacon, beetrootBeacon)
-  push();
-  noStroke();
-  fill(me.color);
-  ellipse(me.pos.x, me.pos.y, 30);
-  pop();
 }

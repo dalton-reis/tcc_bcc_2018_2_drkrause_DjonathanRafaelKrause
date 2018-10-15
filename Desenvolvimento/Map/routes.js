@@ -47,6 +47,39 @@ module.exports = function (app) {
     }
   })
 
+  // Simula o recebimento de dados
+  app.get('/simulate', (req, res) => {
+    let simulationInterval = setInterval(simulate, 1000)
+    res.send({ msg: 'Simulando' })
+  })
+
+  app.get('/stop', (req, res) => {
+    clearInterval(simulationInterval);
+    res.send({ msg: 'Parando simulação' })
+  })
+
+  function simulate() {
+    let min = 83
+    let max = 102
+    let randomRSSI = (Math.floor(Math.random() * (max - min + 1)) + min) * -1
+    queue.add(testBeacon = {
+      id: 'D7:80:45:7D:C8:86',
+      rssi: randomRSSI
+    })
+
+    randomRSSI = (Math.floor(Math.random() * (max - min + 1)) + min) * -1
+    queue.add(testBeacon = {
+      id: 'F8:15:B1:06:9B:71', 
+      rssi: randomRSSI
+    })
+
+    randomRSSI = (Math.floor(Math.random() * (max - min + 1)) + min) * -1
+    queue.add(testBeacon = {
+      id: 'CF:43:E0:FA:CE:D2', 
+      rssi: randomRSSI
+    })
+  }
+
   // Insere dados de teste
   app.get('/testData', (req, res) => {
     let min = 80
@@ -74,8 +107,5 @@ module.exports = function (app) {
 
     res.send({ queue: queue.show() })
   })
-
-
-
 
 }

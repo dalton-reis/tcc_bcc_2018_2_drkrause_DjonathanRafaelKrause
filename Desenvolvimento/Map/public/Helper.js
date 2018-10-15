@@ -25,6 +25,7 @@ function setValues(beaconData) {
   } else if (beaconData.id === ADDR_BEETROOT_BEACON) {
     beetrootBeacon.setRSSI(beaconData.rssi)
   }
+
 }
 
 function isEmptyObject(obj) {
