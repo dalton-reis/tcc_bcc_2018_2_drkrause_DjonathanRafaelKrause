@@ -90,16 +90,3 @@ function drawDist(p1, p2, dist) {
   pop();
 }
 
-/**
- * https://www.wouterbulten.nl/blog/tech/lightweight-javascript-library-for-noise-filtering/
- */
-function kalman(noisyData) {
-  //let noisyData = [-86,-84,-82,-84,-79,-82,-80,-78,-80,-76,-77,-83,-78,-75,-86,-84,-78,-86,-87,-92,-90,-79,-79,-79,-88,-78,-91,-92,-91,-91,-91,-91,-82,-87,-82]
-  let kalmanFilter = new KalmanFilter({R: 0.01, Q: 3});
-
-  let result = kalmanFilter.filter(noisyData)
-
-  console.log(noisyData + " - " + result)
-
-  return result
-}

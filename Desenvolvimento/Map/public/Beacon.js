@@ -10,6 +10,9 @@ class Beacon {
     this.txPower = txPower // RSSI médio a 1m
     this.motionAvgFilter = new MotionAvgFilter(50)
 
+    // https://www.wouterbulten.nl/blog/tech/lightweight-javascript-library-for-noise-filtering/
+    this.kalmanFilter = new KalmanFilter({R: 0.01, Q: 3})
+
     this.normPos = createVector(normalize(this.pos.x), normalize(this.pos.y))
   }
 
@@ -24,8 +27,12 @@ class Beacon {
   setRSSI (newRSSI) {
     if (!isEmpty(newRSSI)) {
       this.motionAvgFilter.step(newRSSI)
-      this.rssi = this.motionAvgFilter.currentState()
-      //console.log("FILTRADO: " + this.rssi + " | RECEBIDO: " + newRSSI) 
+      let avgFilter = round(this.motionAvgFilter.currentState()).toFixed(2)
+      this.rssi = kalmanFilter.filter(newRSSI).toFixed(2)
+
+      if (this.name === 'beacon_roxo') {
+        console.log("RECEBIDO: " + newRSSI + " | KALMAN: " + this.rssi + " | MEDIA: " + avgFilter)
+      }
     }
   }
 }

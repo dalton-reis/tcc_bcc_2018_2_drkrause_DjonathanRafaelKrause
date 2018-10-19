@@ -1,6 +1,6 @@
 const SERVER = 'http://localhost:80/'
 
-const FRAME_RATE = 2
+const FRAME_RATE = 30
 
 const LEMON_COLOR = [232, 222, 0, 250]
 const CANDY_COLOR = [242, 158, 194, 250]

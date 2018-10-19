@@ -2,6 +2,7 @@ module.exports = function (app) {
   // Imports
   let Queue = require('./Queue.js')
   let queue = new Queue()
+  let reqCount = 0
 
   // add beacons na fila
   app.get('/add/:data', (req, res) => {
@@ -12,6 +13,8 @@ module.exports = function (app) {
   // add lista de beacons na fila
   app.post('/addAll', (req, res) => {
     if (req.body !== undefined && req.body !== null) {
+      console.log("Inserindo na fila. reqCount: " + reqCount + ". Tamanho da fila: " + queue.size())
+      reqCount++
       queue.addAll(req.body)
       res.send({ msg: 'dados inseridos' })
     } else {
@@ -49,14 +52,14 @@ module.exports = function (app) {
 
   // Simula o recebimento de dados
   app.get('/simulate', (req, res) => {
-    let simulationInterval = setInterval(simulate, 1000)
+    let simulationInterval = setInterval(simulate, 100)
     res.send({ msg: 'Simulando' })
   })
 
   app.get('/stop', (req, res) => {
     clearInterval(simulationInterval);
     res.send({ msg: 'Parando simulação' })
-  })
+  })  
 
   function simulate() {
     let min = 83
@@ -67,13 +70,13 @@ module.exports = function (app) {
       rssi: randomRSSI
     })
 
-    randomRSSI = (Math.floor(Math.random() * (max - min + 1)) + min) * -1
+    
     queue.add(testBeacon = {
       id: 'F8:15:B1:06:9B:71', 
       rssi: randomRSSI
     })
 
-    randomRSSI = (Math.floor(Math.random() * (max - min + 1)) + min) * -1
+    
     queue.add(testBeacon = {
       id: 'CF:43:E0:FA:CE:D2', 
       rssi: randomRSSI

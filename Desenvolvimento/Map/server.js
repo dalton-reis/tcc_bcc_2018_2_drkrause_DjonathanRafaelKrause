@@ -14,13 +14,12 @@ require('./routes')(app)
 
 // Testes
 app.get('/testGet/:data', (req, res) => {
-  console.log("CHEGOU REQUEST: " + req.params.data)
+  console.log(req.params.data)
   res.send({ msg: 'GET OK' })
 })
 
 app.post('/testPost', (req, res) => {
-  let data = req.body
-  console.log(data)
+  console.log(req.body)
   res.send({ msg: 'POST OK' })
 })
 

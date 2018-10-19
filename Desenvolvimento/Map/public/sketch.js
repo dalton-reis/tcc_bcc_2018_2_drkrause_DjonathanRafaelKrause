@@ -1,7 +1,7 @@
-
+﻿let kalmanFilter
 let beacons = []
 let lemonBeacon, candyBeacon, beetrootBeacon
-let me, beaconData
+let me, beaconData, noMoreDataSign
 
 // Setup do mapa
 function setup() {
@@ -10,21 +10,20 @@ function setup() {
   textSize(20)
   textAlign(CENTER)
 
-  lemonBeacon = new Beacon('D7:80:45:7D:C8:86', createVector(50, 50), 4, LEMON_COLOR, 'beacon_amarelo', -79.636)
-  candyBeacon = new Beacon('F8:15:B1:06:9B:71', createVector(550, 50), 4, CANDY_COLOR, 'beacon_rosa', -88.741)
-  beetrootBeacon = new Beacon('CF:43:E0:FA:CE:D2', createVector(550, 550), 4, BEETROOT_COLOR, 'beacon_roxo', -83.657)
+  initBeacons()
 
-
-  beacons.push(lemonBeacon);
-  beacons.push(candyBeacon);
-  beacons.push(beetrootBeacon);
+  kalmanFilter = new KalmanFilter({R: 0.01, Q: 3})
 
   me = {
     pos: createVector(width/2, height/2), // posicao inicial
     color: BLUE
   }
 
-  kalman()
+  // Indica se tem ou nao dados para serem consumidos na fila
+  noMoreDataSign = {
+    pos: createVector(width- 15, 15),
+    color: [255, 0, 0]
+  }
 }
 
 // Função que fica em loop atualizando a posição no mapa
@@ -40,13 +39,12 @@ function draw() {
   fill(255)
   strokeWeight(0)
   text('3m', width/2, 30)
+  fill(noMoreDataSign.color)
+  ellipse(noMoreDataSign.pos.x, noMoreDataSign.pos.y, 10)
   pop()
   
-  // Pega os RSSIs dos beacons inserida na fila e seta nos beacons do mapa
   getFromQueue()
-
   updateBeacons()
-
   updateMe()
 }
 
@@ -57,7 +55,8 @@ function updateBeacons() {
 	for(beacon of beacons) {
     let p1 = me.pos
     let p2 = beacon.pos
-    beacon.dist = calcDistRSSI(beacon) * 100
+
+    beacon.dist = calcDistRSSI(beacon) * 100  // em cm
 
     drawDist(p1, p2, beacon.dist)
     line(beacon.pos.x, beacon.pos.y, me.pos.x, me.pos.y)
@@ -77,4 +76,17 @@ function updateBeacons() {
  */
 function updateMe() {
   me.pos = getTrilateration(lemonBeacon, candyBeacon, beetrootBeacon)
+}
+
+/**
+ * Cria os beacons
+ */
+function initBeacons() {
+  lemonBeacon = new Beacon('D7:80:45:7D:C8:86', createVector(50, 50), 4, LEMON_COLOR, 'beacon_amarelo', -80)
+  candyBeacon = new Beacon('F8:15:B1:06:9B:71', createVector(550, 50), 4, CANDY_COLOR, 'beacon_rosa', -89)
+  beetrootBeacon = new Beacon('CF:43:E0:FA:CE:D2', createVector(550, 550), 4, BEETROOT_COLOR, 'beacon_roxo', -84)
+
+  beacons.push(lemonBeacon);
+  beacons.push(candyBeacon);
+  beacons.push(beetrootBeacon);
 }

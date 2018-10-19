@@ -11,7 +11,6 @@ module.exports = class Queue {
     // [ obj: id: ___, rssi: ___ ]
     if (allData !== undefined && allData !== null) {
       for (let i = 0; i < allData.length; i++) {
-        console.log(allData[i].id + " - " + allData[i].rssi)
         this.add({ id: allData[i].id, rssi: allData[i].rssi })
       }
     }
@@ -35,6 +34,10 @@ module.exports = class Queue {
 
   reset () {
     this.dados = []
+  }
+
+  size () {
+    return this.dados.length
   }
 
 }
