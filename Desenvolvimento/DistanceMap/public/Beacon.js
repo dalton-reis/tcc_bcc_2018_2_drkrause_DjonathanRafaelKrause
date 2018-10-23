@@ -30,7 +30,7 @@ class Beacon {
       let avgFilter = round(this.motionAvgFilter.currentState()).toFixed(2)
       this.rssi = kalmanFilter.filter(newRSSI).toFixed(2)
 
-      console.log(this.name + "\t| RECEBIDO: " + newRSSI + " | KALMAN: " + this.rssi + " | MEDIA: " + avgFilter)
+      //console.log(this.name + "\t| RECEBIDO: " + newRSSI + " | KALMAN: " + this.rssi + " | MEDIA: " + avgFilter)
     }
   }
 }
