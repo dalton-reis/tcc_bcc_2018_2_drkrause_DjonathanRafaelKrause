@@ -5,11 +5,13 @@ function getFromQueue() {
     .then((res) => res.json()) 
     .then((data) => {
       if (!isEmptyObject(data)) {
-        noMoreDataSign.color = [255]
+        emptyQueueFlag.color = [255]
+        emptyQueueFlag.isEmpty = false
         return setValues(data)
       } else {
         //console.log("Sem mais dados para consumir da fila")
-        noMoreDataSign.color = [255,0,0]
+        emptyQueueFlag.color = [255,0,0]
+        emptyQueueFlag.isEmpty = true
         return
       }
     })

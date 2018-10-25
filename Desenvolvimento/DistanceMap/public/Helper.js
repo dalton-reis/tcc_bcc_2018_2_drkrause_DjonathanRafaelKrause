@@ -22,11 +22,11 @@ function getFromQueue() {
 function setValues(beaconData) {
   if (beaconData.id === ADDR_LEMON_BEACON) {
     lemonBeacon.setRSSI(beaconData.rssi)
-  } /*else if (beaconData.id === ADDR_CANDY_BEACON) {
+  } else if (beaconData.id === ADDR_CANDY_BEACON) {
     candyBeacon.setRSSI(beaconData.rssi)
   } else if (beaconData.id === ADDR_BEETROOT_BEACON) {
     beetrootBeacon.setRSSI(beaconData.rssi)
-  }*/
+  }
 
 }
 

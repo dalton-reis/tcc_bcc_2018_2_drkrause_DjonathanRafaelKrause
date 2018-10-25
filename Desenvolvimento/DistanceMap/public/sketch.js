@@ -9,6 +9,7 @@ function setup() {
   frameRate(FRAME_RATE)
   textSize(20)
   textAlign(CENTER)
+  img = loadImage('map.png')
 
   initBeacons()
 
@@ -18,6 +19,12 @@ function setup() {
   noMoreDataSign = {
     pos: createVector(width- 15, 15),
     color: [255, 0, 0]
+  }
+
+  me = {
+    pos: lemonBeacon.pos, // posicao inicial
+    color: BLUE,
+    nearer: lemonBeacon 
   }
 }
 
@@ -34,53 +41,45 @@ function draw() {
   fill(noMoreDataSign.color)
   ellipse(noMoreDataSign.pos.x, noMoreDataSign.pos.y, 10)
   fill(0)
-  //text('LCI', lemonBeacon.pos.x * 1.15, lemonBeacon.pos.y + 8)
+  image(img, 0, 0)
+  text('LCI', 575, 65)
   //text('S-412', candyBeacon.pos.x * 1.17, candyBeacon.pos.y + 8)
   //text('Robótica', beetrootBeacon.pos.x * 1.22, beetrootBeacon.pos.y + 8)
   pop()
   
   getFromQueue()
-  updateBeacons()
-}
 
-/**
- * Desenha beacons e atualiza a distância
- */
-function updateBeacons() {
-	for(beacon of beacons) {
-
-    d = calcDistRSSI(beacon) //* 100  // em cm
+  for(beacon of beacons) {
+    d = calcDistRSSI(beacon) // em metros
     beacon.dist = d
-    
+
+    // Atualiza o beacon mais próximo do receptor
+    if (d < me.nearer.dist) {
+      me.nearer = beacon
+      me.pos = beacon.pos
+      console.log(d + ' metros')
+    }
     
     push();
     fill(255)
-    let proximity = calcProximity(d)
-    let r = map(d, 0, 15, 40, 600)
-    console.log(proximity + ' - ' + d + ' metros')
-    ellipse(beacon.pos.x, beacon.pos.y, r)
     beacon.show()
+    fill(me.color)
+    noStroke()
+    ellipse(me.pos.x, me.pos.y, 25)
     pop();
   }
 }
 
-function calcProximity(distance) {
-  if (distance < 100) {
-    return "NEAR"
-  } else if (distance > 200) {
-    return "FAR"
-  }
-}
 
 /**
  * Cria os beacons
  */
 function initBeacons() {
-  lemonBeacon = new Beacon('D7:80:45:7D:C8:86', createVector(width/2, height/2), 4, LEMON_COLOR, 'beacon_amarelo', -78)
-  //candyBeacon = new Beacon('F8:15:B1:06:9B:71', createVector(width/2, height/2), 4, CANDY_COLOR, 'beacon_rosa', -77)
-  //beetrootBeacon = new Beacon('CF:43:E0:FA:CE:D2', createVector(width/2, 550), 4, BEETROOT_COLOR, 'beacon_roxo', -80)
+  lemonBeacon = new Beacon('D7:80:45:7D:C8:86', createVector(465, 65), 4, LEMON_COLOR, 'beacon_amarelo', -78)
+  candyBeacon = new Beacon('F8:15:B1:06:9B:71', createVector(470, 330), 4, CANDY_COLOR, 'beacon_rosa', -77)
+  beetrootBeacon = new Beacon('CF:43:E0:FA:CE:D2', createVector(120, 540), 4, BEETROOT_COLOR, 'beacon_roxo', -80)
 
   beacons.push(lemonBeacon);
-  //beacons.push(candyBeacon);
-  //beacons.push(beetrootBeacon);
+  beacons.push(candyBeacon);
+  beacons.push(beetrootBeacon);
 }

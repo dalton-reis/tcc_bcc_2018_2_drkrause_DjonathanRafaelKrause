@@ -5,7 +5,7 @@
  * Trilateração: https://en.wikipedia.org/wiki/Trilateration
  */
 function getTrilateration(beacon1, beacon2, beacon3) {
-  // Seta vars xy de a, b e c
+  // Seta vars xy dos beacons a, b e c
   let xa = beacon1.pos.x
   let ya = beacon1.pos.y
   
@@ -21,11 +21,22 @@ function getTrilateration(beacon1, beacon2, beacon3) {
   let rb = beacon2.dist
   let rc = beacon3.dist
 
-  // Faz a mágica
-  let S = (Math.pow(xc, 2.) - Math.pow(xb, 2.) + Math.pow(yc, 2.) - Math.pow(yb, 2.) + Math.pow(rb, 2.) - Math.pow(rc, 2.)) / 2.0;
-  let T = (Math.pow(xa, 2.) - Math.pow(xb, 2.) + Math.pow(ya, 2.) - Math.pow(yb, 2.) + Math.pow(rb, 2.) - Math.pow(ra, 2.)) / 2.0;
-  let y = ((T * (xb - xc)) - (S * (xb - xa))) / (((ya - yb) * (xb - xc)) - ((yc - yb) * (xb - xa)));
-  let x = ((y * (ya - yb)) - T) / (xb - xa);
+  // MAP
+  xa = map(xa, 0, width, 0, 500)
+  ya = map(ya, 0, height, 0, 900)
+  xb = map(xb, 0, width, 0, 500)
+  yb = map(yb, 0, height, 0, 900)
+  xc = map(xc, 0, width, 0, 500)
+  yc = map(yc, 0, height, 0, 900)
+  
+  // Faz a matemágica
+  let S = (Math.pow(xc, 2.) - Math.pow(xb, 2.) + Math.pow(yc, 2.) - Math.pow(yb, 2.) + Math.pow(rb, 2.) - Math.pow(rc, 2.)) / 2.0
+  let T = (Math.pow(xa, 2.) - Math.pow(xb, 2.) + Math.pow(ya, 2.) - Math.pow(yb, 2.) + Math.pow(rb, 2.) - Math.pow(ra, 2.)) / 2.0
+  let y = ((T * (xb - xc)) - (S * (xb - xa))) / (((ya - yb) * (xb - xc)) - ((yc - yb) * (xb - xa)))
+  let x = ((y * (ya - yb)) - T) / (xb - xa)
+
+  x = map(x, 0, 500, 0, width)
+  y = map(y, 0, 900, 0, height)
 
   // Retorna vetor com x e y calculados
   return createVector(floor(x), floor(y))
