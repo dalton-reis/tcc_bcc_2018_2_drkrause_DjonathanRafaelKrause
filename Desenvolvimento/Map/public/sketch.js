@@ -6,8 +6,9 @@ let me, beaconData, emptyQueueFlag, greaterDistPx, img
 // Setup do mapa
 function setup() {
   // density = displayDensity()
-  pixelDensity(1)
-  createCanvas(480, 858)
+  //pixelDensity(1)
+  //createCanvas(480, 858)
+  createCanvas(500, 900)
   frameRate(FRAME_RATE)
   textSize(20)
   textAlign(CENTER)
@@ -48,12 +49,12 @@ function draw() {
   rect(0, 0, width, height)
   fill(255)
   strokeWeight(0)
-  text('3m', width/2, 30)
+  //text('xm', width/2, 30)
   fill(emptyQueueFlag.color)
   ellipse(emptyQueueFlag.pos.x, emptyQueueFlag.pos.y, 10)
   image(img, 0, 0)
   pop()
-  
+
   getFromQueue()
   updateBeacons()
 
@@ -70,15 +71,14 @@ function updateBeacons() {
     let p2 = beacon.pos
 
     let d = calcDistRSSI(beacon) * 100  // * 100 pra ficar em cm
-    beacon.dist = d 
+    let d2 = calcDistRSSI2(beacon) * 100  // * 100 pra ficar em cm
+    beacon.dist = d2
 
     // posição dos beacons em pixels (50, 50...)
     // distância entre receptor e beacons em centímetros
     // ao calcular a posição atual com base na distância da ruim pq a
     // posição atual dos beacons está em pixels e a distância entre eles está em centímetros
-
-    //if (beacon.name == 'beacon_rosa') 
-      //console.log(d + ' cm ')
+    //console.log(beacon.name + ' - ' + d + ' | ' + d2)
 
     drawDist(p1, p2, beacon.dist)
     line(beacon.pos.x, beacon.pos.y, me.pos.x, me.pos.y)
@@ -100,8 +100,8 @@ function updateBeacons() {
  */
 function initBeacons() {
   lemonBeacon = new Beacon('D7:80:45:7D:C8:86', createVector(50, 50), 2, LEMON_COLOR, 'beacon_amarelo', -78)
-  candyBeacon = new Beacon('F8:15:B1:06:9B:71', createVector(width-45, 50), 2, CANDY_COLOR, 'beacon_rosa', -77)
-  beetrootBeacon = new Beacon('CF:43:E0:FA:CE:D2', createVector(width-10, height-10), 2, BEETROOT_COLOR, 'beacon_roxo', -80)
+  candyBeacon = new Beacon('F8:15:B1:06:9B:71', createVector(width-50, 50), 2, CANDY_COLOR, 'beacon_rosa', -77)
+  beetrootBeacon = new Beacon('CF:43:E0:FA:CE:D2', createVector(width-50, height-50), 2, BEETROOT_COLOR, 'beacon_roxo', -80)
 
   beacons.push(lemonBeacon);
   beacons.push(candyBeacon);

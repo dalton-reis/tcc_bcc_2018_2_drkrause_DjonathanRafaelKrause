@@ -12,8 +12,6 @@ class Beacon {
 
     // https://www.wouterbulten.nl/blog/tech/lightweight-javascript-library-for-noise-filtering/
     this.kalmanFilter = new KalmanFilter({R: 0.01, Q: 3})
-
-    this.normPos = createVector(normalize(this.pos.x), normalize(this.pos.y))
   }
 
   show () {

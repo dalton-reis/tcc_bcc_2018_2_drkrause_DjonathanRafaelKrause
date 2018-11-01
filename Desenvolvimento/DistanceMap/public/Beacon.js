@@ -12,8 +12,6 @@ class Beacon {
 
     // https://www.wouterbulten.nl/blog/tech/lightweight-javascript-library-for-noise-filtering/
     this.kalmanFilter = new KalmanFilter({R: 0.01, Q: 3})
-
-    this.normPos = createVector(normalize(this.pos.x), normalize(this.pos.y))
   }
 
   show () {
@@ -28,9 +26,10 @@ class Beacon {
     if (!isEmpty(newRSSI)) {
       this.motionAvgFilter.step(newRSSI)
       let avgFilter = round(this.motionAvgFilter.currentState()).toFixed(2)
-      //let kamlman = kalmanFilter.filter(newRSSI).toFixed(2)
-      
+      let kalman = kalmanFilter.filter(newRSSI).toFixed(2)
+
       this.rssi = avgFilter
+
       //console.log(this.name + "\t| RECEBIDO: " + newRSSI + " | KALMAN: " + this.rssi + " | MEDIA: " + avgFilter)
     }
   }

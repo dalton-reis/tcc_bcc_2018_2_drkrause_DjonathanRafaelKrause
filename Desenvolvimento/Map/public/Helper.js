@@ -23,10 +23,13 @@ function getFromQueue() {
 // Seta beacon recebido de acordo com o id
 function setValues(beaconData) {
   if (beaconData.id === ADDR_LEMON_BEACON) {
+    console.log('amarelo ' + beaconData.rssi)
     lemonBeacon.setRSSI(beaconData.rssi)
   } else if (beaconData.id === ADDR_CANDY_BEACON) {
+    console.log('rosa ' + beaconData.rssi)
     candyBeacon.setRSSI(beaconData.rssi)
   } else if (beaconData.id === ADDR_BEETROOT_BEACON) {
+    console.log('roxo ' + beaconData.rssi)
     beetrootBeacon.setRSSI(beaconData.rssi)
   }
 
