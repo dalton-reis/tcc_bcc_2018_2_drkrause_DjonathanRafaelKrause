@@ -22,6 +22,16 @@ module.exports = function (app) {
     }
   })
 
+  app.post('/calibrationComplete', (req, res) => {
+    if (req.body !== undefined && req.body !== null) {
+      let data = req.body
+      console.log("DADOS RECEBIDOS")
+      console.log(data)
+    } else {
+      res.send({ msg: 'erro' })
+    }
+  })
+
   // Remove o primeiro dado da fila
   app.get('/remove', (req, res) => {
     let data = queue.remove()

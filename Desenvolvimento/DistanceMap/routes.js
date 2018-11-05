@@ -2,6 +2,7 @@ module.exports = function (app) {
   // Imports
   let Queue = require('./Queue.js')
   let queue = new Queue()
+  let calibratedBeacons = []
   let reqCount = 0
 
   // add beacons na fila
@@ -22,6 +23,44 @@ module.exports = function (app) {
     }
   })
 
+  app.post('/calibrationComplete', (req, res) => {
+    if (req.body !== undefined && req.body !== null) {
+      let data = req.body
+      calibratedBeacons = data
+      console.log(data)
+    } else {
+      res.send({ msg: 'erro' })
+    }
+  })
+
+  app.get('/getCalibratedBeacons', (req, res) => {
+    let data = calibratedBeacons
+    calibratedBeacons = []
+    res.send(data)
+  })
+
+  app.get('/forceCalibration', (req, res) => {
+    calibratedBeacons = [
+      { id: 'D7:80:45:7D:C8:86',
+        name: 'beacon_amarelo',
+        txPower: -78,
+        rssi: -90,
+        maxRSSI: -50,
+        minRSSI: -100,
+      },
+      { 
+        id: 'F8:15:B1:06:9B:71',
+        name: 'beacon_rosa',
+        txPower: -77,
+        rssi: -57,
+        maxRSSI: -52,
+        minRSSI: -103,
+      } 
+    ]
+
+    res.send({ msg: 'ok' })
+  })
+
   // Remove o primeiro dado da fila
   app.get('/remove', (req, res) => {
     let data = queue.remove()
@@ -33,12 +72,6 @@ module.exports = function (app) {
     }
   })
 
-  // Limpa fila
-  app.get('/reset', (req, res) => {
-    queue.reset()
-    res.send({ msg: 'resetada' })
-  })
-  
   // Mostra todos os dados da queue (nao remove)
   app.get('/show', (req, res) => {
     let data = queue.show()
@@ -50,65 +83,6 @@ module.exports = function (app) {
     }
   })
 
-  // Simula o recebimento de dados
-  app.get('/simulate', (req, res) => {
-    let simulationInterval = setInterval(simulate, 100)
-    res.send({ msg: 'Simulando' })
-  })
-
-  app.get('/stop', (req, res) => {
-    clearInterval(simulationInterval);
-    res.send({ msg: 'Parando simulação' })
-  })  
-
-  function simulate() {
-    let min = 83
-    let max = 102
-    let randomRSSI = (Math.floor(Math.random() * (max - min + 1)) + min) * -1
-    queue.add(testBeacon = {
-      id: 'D7:80:45:7D:C8:86',
-      rssi: randomRSSI
-    })
-
-    
-    queue.add(testBeacon = {
-      id: 'F8:15:B1:06:9B:71', 
-      rssi: randomRSSI
-    })
-
-    
-    queue.add(testBeacon = {
-      id: 'CF:43:E0:FA:CE:D2', 
-      rssi: randomRSSI
-    })
-  }
-
-  // Insere dados de teste
-  app.get('/testData', (req, res) => {
-    let min = 80
-    let max = 86
-
-    for(let i = 0; i < 500; i++) {
-      let randomRSSI = (Math.floor(Math.random() * (max - min + 1)) + min) * -1
-      queue.add(testBeacon = {
-        id: 'D7:80:45:7D:C8:86', // beacon_amarelo
-        rssi: randomRSSI
-      })
-
-      randomRSSI = (Math.floor(Math.random() * (max - min + 1)) + min) * -1
-      queue.add(testBeacon = {
-        id: 'F8:15:B1:06:9B:71', 
-        rssi: randomRSSI
-      })
-
-      randomRSSI = (Math.floor(Math.random() * (max - min + 1)) + min) * -1
-      queue.add(testBeacon = {
-        id: 'CF:43:E0:FA:CE:D2', 
-        rssi: randomRSSI
-      })
-    }
-
-    res.send({ queue: queue.show() })
-  })
+  
 
 }

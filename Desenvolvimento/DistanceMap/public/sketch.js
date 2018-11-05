@@ -1,7 +1,8 @@
 ﻿let kalmanFilter
 let beacons = []
 let lemonBeacon, candyBeacon, beetrootBeacon
-let me, beaconData, noMoreDataSign
+let me, beaconData, isEmptyQueue, beaconsAreCalibrated = false
+let maxDist, btnGetCalibration
 
 // Setup do mapa
 function setup() {
@@ -11,19 +12,29 @@ function setup() {
   textAlign(CENTER)
   initBeacons()
 
+  btnGetCalibration = createButton('Resetar Calibração')
+  btnGetCalibration.position(width + 15, 10)
+  btnGetCalibration.mousePressed(() => { 
+    beaconsAreCalibrated = false
+  })
+
   kalmanFilter = new KalmanFilter({R: 0.01, Q: 3})
 
   // Indica se tem ou nao dados para serem consumidos na fila
-  noMoreDataSign = {
+  isEmptyQueue = {
     pos: createVector(width- 15, 15),
-    color: [255, 0, 0]
+    color: [255, 0, 0],
+    isEmpty: true
   }
 
   me = {
-    pos: createVector(width/2, height-100), 
+    pos: createVector(width/2, height/2), 
     color: BLUE,
     nearer: lemonBeacon 
   }
+
+  maxDist = candyBeacon.pos.y - lemonBeacon.pos.y
+
 }
 
 // Função que fica em loop atualizando a posição no mapa
@@ -36,43 +47,50 @@ function draw() {
   rect(0, 0, width, height)
   fill(255)
   strokeWeight(0)
-  fill(noMoreDataSign.color)
-  ellipse(noMoreDataSign.pos.x, noMoreDataSign.pos.y, 10)
+  fill(isEmptyQueue.color)
+  ellipse(isEmptyQueue.pos.x, isEmptyQueue.pos.y, 10)
   fill(0)
   pop()
   
-  getFromQueue()
+  if (!beaconsAreCalibrated) {
+    getCalibratedBeacons()
+    text('Os beacons não estão calibrados', width/2, height/2)
+  } else {
+    getFromQueue()
 
-  for(beacon of beacons) {
-    let d1 = dist1(beacon)
-    let d2 = dist2(beacon)
-    let d3 = dist3(beacon)
-
-    push();
-    fill(255)
-    beacon.show()
-    stroke(1)
+    push()
     fill(me.color)
     noStroke()
     ellipse(me.pos.x, me.pos.y, 25)
-    fill(1)
+    pop()
 
-    text('RSSI: ' + beacon.rssi, beacon.pos.x, beacon.pos.y+40)
-    text(nfc(d1, 2) + '', beacon.pos.x, beacon.pos.y+60)
-    text(nfc(d2, 2) + '', beacon.pos.x, beacon.pos.y+80)
-    text(nfc(d3, 2) + '', beacon.pos.x, beacon.pos.y+100)
+    for(beacon of beacons) {
+      if (!isEmptyQueue.isEmpty) {
+        let d = calcDistRSSI(beacon)
+        beacon.dist = d
+        me.pos.y = map(d, 0, 100, lemonBeacon.pos.y, candyBeacon.pos.y)
+      }
 
-    pop();
+      if (beacon.name == 'beacon_rosa') {
+        console.log('Min: ' + beacon.minRSSI +  ' | Max: ' + beacon.maxRSSI)
+      }
+
+
+      push()
+      fill(255)
+      beacon.show()
+      stroke(1)
+      fill(1)
+      text(beacon.dist + '% |' + beacon.rssi, beacon.pos.x, beacon.pos.y+40)
+      pop()
+    }
   }
 }
 
 function initBeacons() {
-  lemonBeacon = new Beacon('D7:80:45:7D:C8:86', createVector(width/2-200, 100), 4, LEMON_COLOR, 'beacon_amarelo', -78)
-  candyBeacon = new Beacon('F8:15:B1:06:9B:71', createVector(width/2, 100), 4, CANDY_COLOR, 'beacon_rosa', -77)
-  beetrootBeacon = new Beacon('CF:43:E0:FA:CE:D2', createVector(width/2+200, 100), 4, BEETROOT_COLOR, 'beacon_roxo', -80)
+  lemonBeacon = new Beacon('D7:80:45:7D:C8:86', createVector(width/2, 100), 4, LEMON_COLOR, 'beacon_amarelo', -78)
+  candyBeacon = new Beacon('F8:15:B1:06:9B:71', createVector(width/2, height-100), 4, CANDY_COLOR, 'beacon_rosa', -77)
 
   beacons.push(lemonBeacon);
   beacons.push(candyBeacon);
-  beacons.push(beetrootBeacon);
 }
-

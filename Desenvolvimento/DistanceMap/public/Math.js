@@ -1,3 +1,18 @@
+
+function calcDistRSSI(beacon) {
+  let rssi = beacon.rssi
+  let max = beacon.maxRSSI
+  let min = beacon.minRSSI
+
+  //console.log("RSSI: " + rssi + ' | max: ' + max + ' | min: ' + min)
+
+  return map(rssi, min, max, 0, 100).toFixed(2)
+}
+
+
+
+
+
 // Parametros antigos android beacon library
 function dist1(beacon) {
   let ratio = beacon.rssi*1.0 / beacon.txPower
