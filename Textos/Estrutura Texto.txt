@@ -1,10 +1,10 @@
+3.2 RSSI
+Explicar oq é o RSSI e os problemas encontrados.
+
 3.  Descrição
 
 3.1 Hardware
 Falar sobre os beacons utilizados e os celulares.
-
-3.2 RSSI
-Explicar oq é o RSSI e os problemas encontrados.
 
 3.3 Coleta de Dados
 Mostrar como o Ionic foi utilizado para efetuar a coleta de dados.
