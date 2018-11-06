@@ -1,0 +1,57 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title> Beacon Scanner </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <!-- SERVIDOR -->
+  <ion-item>
+    <ion-label>Servidor </ion-label>
+    <ion-select [(ngModel)]="SERVER">
+      <ion-option value="http://192.168.0.64:80/">AP</ion-option>
+      <ion-option value="http://10.13.20.86:80/">FURB</ion-option>
+    </ion-select>
+  </ion-item>
+  <br />
+  
+  <!-- OPÇÕES -->
+  <ion-row center>  
+    <ion-col text-center>   
+        <button *ngIf="!calibrating" ion-button (click)="calibrate()"> Calibrar </button>
+        <button *ngIf="calibrating" ion-button (click)="calibrationComplete()"> Parar Calibração </button>
+    </ion-col>
+  </ion-row>
+
+  <ion-row center>  
+    <ion-col text-center>   
+        <button *ngIf="!scanning && calibrated" ion-button (click)="scanAll()"> Procurar Beacons </button>
+        <button *ngIf="scanning" ion-button (click)="stopScan()"> Parar Scan </button>
+    </ion-col>
+  </ion-row>
+
+
+  <ion-item-divider></ion-item-divider>
+  
+  <ion-label>Logs:</ion-label>
+  <ion-textarea [(ngModel)]="logs"></ion-textarea>
+
+  <ion-item-divider></ion-item-divider>
+
+  <ion-list>
+    <ion-item *ngFor="let beacon of validBeacons">
+      {{beacon.name}}: {{beacon.rssi}} | {{beacon.filteredRSSI}}
+      </ion-item>
+  </ion-list>
+
+</ion-content>
+
+
+  <!-- TESTES HTTP 
+  <ion-row center>
+    <ion-col text-center> 
+      <button ion-button (click)="testGet()"> Testar GET </button>
+      <button ion-button (click)="testPost()"> Testar POST </button>
+    </ion-col>
+  </ion-row>
+  -->

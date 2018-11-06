@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title> Estimote Beacons </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <div>
+    <ion-item>
+      <ion-label> Beacon Analisado </ion-label>
+      <ion-select [(ngModel)]="idBeaconAnalisado">
+        <ion-option value="D7:80:45:7D:C8:86">Estimote Amarelo</ion-option>
+        <ion-option value="F8:15:B1:06:9B:71">Estimote Rosa</ion-option>
+        <ion-option value="CF:43:E0:FA:CE:D2">Estimote Roxo</ion-option>
+        <ion-option value="0C:F3:EE:00:00:00">FURB MiBeacon</ion-option> 
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+        <ion-label color="primary" stacked>Tempo de Análise (Segundos)</ion-label>
+        <ion-input [(ngModel)]="tempoDeAnalise" type="number" value="5"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Salvar no Firebase</ion-label>
+      <ion-checkbox [(ngModel)]="saveOnFirebase"></ion-checkbox>
+    </ion-item>  
+
+    <br> 
+    <button *ngIf="!scanning" ion-button (click)="scanAll()"> Procurar Todos </button>
+    <button *ngIf="!scanning" ion-button (click)="scan()"> Procurar Beacon </button>
+    <button *ngIf="scanning" ion-button (click)="stopScan()"> Parar Scan </button>
+    <button ion-button (click)="testGet()"> Testar GET </button>
+    <button ion-button (click)="testPost()"> Testar POST </button>
+    <br> <br> 
+
+    <ion-item>
+        Scaneando: {{scanning}}
+    </ion-item>
+    
+
+  </div>
+  
+</ion-content>
