@@ -3,6 +3,7 @@ module.exports = function (app) {
   let Queue = require('./Queue.js')
   let queue = new Queue()
   let reqCount = 0
+  let calibratedBeacons = []
 
   // add beacons na fila
   app.get('/add/:data', (req, res) => {
@@ -25,11 +26,46 @@ module.exports = function (app) {
   app.post('/calibrationComplete', (req, res) => {
     if (req.body !== undefined && req.body !== null) {
       let data = req.body
-      console.log("DADOS RECEBIDOS")
+      calibratedBeacons = data
       console.log(data)
     } else {
-      res.send({ msg: 'erro' })
+      res.send({ msg: 'erro ao concluir calibração' })
     }
+  })
+
+  app.get('/getCalibratedBeacons', (req, res) => {
+    res.send(calibratedBeacons)
+    calibratedBeacons = []
+  })
+
+  app.get('/force', (req, res) => {
+    calibratedBeacons = [
+      { id: 'D7:80:45:7D:C8:86',
+    name: 'beacon_amarelo',
+    txPower: -78,
+    rssi: -88,
+    maxRSSI: -58,
+    minRSSI: -103,
+    filteredRSSI: -90.7,
+    rssiFilter: { window: 50, data: [Object] } },
+  { id: 'F8:15:B1:06:9B:71',
+    name: 'beacon_rosa',
+    txPower: -77,
+    rssi: -86,
+    maxRSSI: -49,
+    minRSSI: -104,
+    filteredRSSI: -90.9,
+    rssiFilter: { window: 50, data: [Object] } },
+  { id: 'CF:43:E0:FA:CE:D2',
+    name: 'beacon_roxo',
+    txPower: -80,
+    rssi: -93,
+    maxRSSI: -48,
+    minRSSI: -101,
+    filteredRSSI: -72.4,
+    rssiFilter: { window: 50, data: [Object] } }
+    ]
+    res.send(calibratedBeacons)
   })
 
   // Remove o primeiro dado da fila

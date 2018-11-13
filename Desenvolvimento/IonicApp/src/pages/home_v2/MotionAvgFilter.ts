@@ -13,7 +13,7 @@ export class MotionAvgFilter {
   step (measurement) {
     this.data.push(measurement)
     if (this.data.length > this.window) {
-      let removed = this.data.shift()
+      this.data.shift()
     }
   }
 

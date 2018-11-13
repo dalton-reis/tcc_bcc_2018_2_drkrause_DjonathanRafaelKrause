@@ -14,22 +14,28 @@
     </ion-select>
   </ion-item>
   <br />
-  
+
   <!-- OPÇÕES -->
   <ion-row center>  
     <ion-col text-center>   
-        <button [disabled]="calibrating || scanning" *ngIf="!calibrating" ion-button (click)="calibrate()"> Calibrar </button>
-        <button *ngIf="calibrating" ion-button (click)="calibrationComplete()"> Parar Calibração </button>
+        <button [disabled]="calibrating || scanning || scanningAll" *ngIf="!calibrating" ion-button (click)="calibrate()"> Calibrar </button>
+        <button *ngIf="calibrating" ion-button (click)="calibrationComplete()"> Concluir Calibração </button>
     </ion-col>
   </ion-row>
 
   <ion-row center>  
     <ion-col text-center>   
-        <button [disabled]="scanning || !calibrated || calibrating" *ngIf="!scanning" ion-button (click)="scanAll()"> Procurar Beacons </button>
+        <button [disabled]="scanning || !calibrated || calibrating || scanningAll" *ngIf="!scanning" ion-button (click)="scan()"> Procurar Beacons </button>
         <button *ngIf="scanning" ion-button (click)="stopScan()"> Parar Scan </button>
     </ion-col>
   </ion-row>
 
+  <ion-row center>  
+    <ion-col text-center>   
+        <button [disabled]="scanning || calibrating" *ngIf="!scanningAll" ion-button (click)="scanAll()"> Procurar Todos Beacons </button>
+        <button *ngIf="scanningAll" ion-button (click)="stopScanAll()"> Parar Scan </button>
+    </ion-col>
+  </ion-row>
 
   <ion-item-divider></ion-item-divider>
   
@@ -38,11 +44,25 @@
 
   <ion-item-divider></ion-item-divider>
 
-  <ion-list>
+  <ion-list *ngIf="calibrating || scanning">
     <ion-item *ngFor="let beacon of validBeacons">
-      {{beacon.name}}: {{beacon.rssi}} | {{beacon.filteredRSSI}}
+      <ion-row justify-content-end>
+        <ion-col col-6>{{beacon.name}}:</ion-col>
+        <ion-col col-6>RSSI: {{beacon.rssi}}dBm</ion-col>
+        <ion-col col-6>RSSI FILTRADO: {{beacon.filteredRSSI}}dBm</ion-col>
+      </ion-row>
       </ion-item>
   </ion-list>
+
+  <ion-list *ngIf="scanningAll">
+      <ion-item *ngFor="let beacon of allBeacons">
+        <ion-row justify-content-end>
+          <ion-col col-6>{{beacon.name}}:</ion-col>
+          <ion-col col-6>RSSI: {{beacon.rssi}}dBm</ion-col>
+          <ion-col col-6>FILTRADO: {{beacon.filteredRSSI}}dBm</ion-col>
+        </ion-row>
+        </ion-item>
+    </ion-list>
 
 </ion-content>
 

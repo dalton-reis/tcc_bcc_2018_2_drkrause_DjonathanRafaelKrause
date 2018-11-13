@@ -10,9 +10,8 @@ export class Beacon {
   filteredRSSI : number
   txPower : number
   rssiFilter : MotionAvgFilter
-  minFilter : MotionAvgFilter
   maxFilter : MotionAvgFilter
-
+  
   constructor (id, name, txPower) {
     this.id = id
     this.name = name
@@ -22,15 +21,12 @@ export class Beacon {
     this.minRSSI = 1000
     this.filteredRSSI = 0
     this.rssiFilter = new MotionAvgFilter(50)
-    this.minFilter = new MotionAvgFilter(3)
     this.maxFilter = new MotionAvgFilter(3)
   }
 
   setRSSI(rssi) {
     this.rssi = rssi
     this.setFilteredRSSI(rssi)
-    this.setMaxRSSI(rssi)
-    this.setMinRSSI(rssi)
   }
 
   setFilteredRSSI(newRSSI) {
@@ -40,18 +36,16 @@ export class Beacon {
   }
 
   setMaxRSSI(rssi) {
-    if (rssi > this.maxRSSI) {
-      this.maxFilter.step(rssi)
-      let filtered = this.maxFilter.currentState()
-      this.maxRSSI = this.round(filtered)
+    this.maxFilter.step(rssi)
+    let maxAvg = this.maxFilter.currentState()
+    if (maxAvg > this.maxRSSI) {
+      this.maxRSSI = maxAvg
     }
   }
 
   setMinRSSI(rssi) {
     if (rssi < this.minRSSI) {
-      this.minFilter.step(rssi)
-      let filtered = this.minFilter.currentState()
-      this.minRSSI = this.round(filtered)
+      this.minRSSI = rssi
     }
   }
 

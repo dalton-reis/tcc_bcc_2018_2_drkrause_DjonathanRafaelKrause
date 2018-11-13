@@ -17,29 +17,43 @@ export class HomePage {
   queueInterval: any
   logs: string
   
-  dataToPost: Array<any> = []
-  validBeacons : Array<Beacon>
+  validBeacons: Array<Beacon>
+  allBeacons: Array<Beacon>
 
   scanning: boolean
+  scanningAll: boolean
   calibrating: boolean
   calibrated: boolean
   
   constructor(public navCtrl: NavController, private ble: BLE, private http: HttpClient) {
     this.scanning = false
+    this.scanningAll = false
     this.calibrated = false
     this.calibrating = false
-    this.dataToPost = []
-    this.sendToQueue()
-    this.logs = ""
 
+    this.allBeacons = []
+    this.logs = ""
+    
+    this.sendToQueue()
+    this.setBeacons()
+  }
+
+  setBeacons() {
     let lemonBeacon = new Beacon('D7:80:45:7D:C8:86', 'beacon_amarelo', -78)
     let candyBeacon = new Beacon('F8:15:B1:06:9B:71', 'beacon_rosa', -77)
     let beetrootBeacon = new Beacon('CF:43:E0:FA:CE:D2', 'beacon_roxo', -80)
 
+    let miBeacon   = new Beacon('MIBEACON', 'mi_beacon', 0)
+    let genBeacon1 = new Beacon('GEN1', 'gen_beacon_1', 0)
+    let genBeacon2 = new Beacon('GEN2', 'gen_beacon_2', 0)
+    
     this.validBeacons = []
     this.validBeacons.push(lemonBeacon)
     this.validBeacons.push(candyBeacon)
     this.validBeacons.push(beetrootBeacon)
+    this.validBeacons.push(miBeacon)
+    this.validBeacons.push(genBeacon1)
+    this.validBeacons.push(genBeacon2)
   }
 
   /**
@@ -106,16 +120,19 @@ export class HomePage {
   updateBeacon(beaconFound) {
     this.validBeacons.forEach((b) => {
       if (b.id === beaconFound.id) {
+        // Pode atualizar o valor mais alto caso ele seja maior do q o calibrado
+        // O menor não deve ser atualizado
+        b.setMaxRSSI(beaconFound.rssi) 
         b.setRSSI(beaconFound.rssi)
       }
     })
   }
 
   /**
-   * Procura todos os beacons até que o botão de parar seja acionado
+   *
    */
-  scanAll() {
-    this.log("Escaneando todos os beacons");
+  scan() {
+    this.log("Procurando beacons válidos");
     this.scanning = true;
     this.ble.startScanWithOptions([], { reportDuplicates: true }).subscribe(
       beaconFound => {
@@ -126,16 +143,45 @@ export class HomePage {
       error => {
         this.log(JSON.stringify(error))
       }
-    );
+    )
   }
   
   /**
    * Para de scanear beacons e limpa as variáveis
    */
   stopScan() {    
-    this.ble.stopScan();
-    clearImmediate(this.queueInterval);
-    this.scanning = false;
+    this.ble.stopScan()
+    clearImmediate(this.queueInterval)
+    this.scanning = false
+  }
+
+  scanAll() {
+    this.log("Procurando todos os beacons")
+    this.scanningAll = true
+    this.ble.startScanWithOptions([], { reportDuplicates: true }).subscribe(
+      beaconFound => {
+        let updated = false
+        for(let b of this.allBeacons) {
+          if (b.id == beaconFound.id) {
+            b.setRSSI(beaconFound.rssi)
+            updated = true
+          }
+        }
+        
+        if (!updated) {
+          let newBeacon = new Beacon(beaconFound.id, beaconFound.id, beaconFound.rssi)
+          this.allBeacons.push(newBeacon)
+        }
+      },
+      error => {
+        this.log(JSON.stringify(error))
+      }
+    )
+  }
+
+  stopScanAll() {
+    this.ble.stopScan()
+    this.scanningAll = false
   }
 
   /**

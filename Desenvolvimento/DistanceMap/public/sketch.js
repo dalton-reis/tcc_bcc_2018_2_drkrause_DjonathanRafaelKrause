@@ -75,7 +75,6 @@ function draw() {
         console.log('Min: ' + beacon.minRSSI +  ' | Max: ' + beacon.maxRSSI)
       }
 
-
       push()
       fill(255)
       beacon.show()

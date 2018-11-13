@@ -1,5 +1,5 @@
 let kalmanFilter
-let beacons = []
+let BEACONS = []
 let lemonBeacon, candyBeacon, beetrootBeacon
 let me, beaconData, emptyQueueFlag, greaterDistPx, img
 
@@ -59,10 +59,10 @@ function draw() {
 }
 
 /**
- * Desenha beacons e atualiza a distância
+ * Desenha BEACONS e atualiza a distância
  */
 function updateBeacons() {
-	for(beacon of beacons) {
+	for(beacon of BEACONS) {
     let p1 = me.pos
     let p2 = beacon.pos
 
@@ -95,14 +95,14 @@ function updateMe() {
 }
 
 /**
- * Cria os beacons
+ * Cria os BEACONS
  */
 function initBeacons() {
   lemonBeacon = new Beacon('D7:80:45:7D:C8:86', createVector(50, 50), 4, LEMON_COLOR, 'beacon_amarelo', -78)
   candyBeacon = new Beacon('F8:15:B1:06:9B:71', createVector(550, 50), 4, CANDY_COLOR, 'beacon_rosa', -77)
   beetrootBeacon = new Beacon('CF:43:E0:FA:CE:D2', createVector(550, 550), 4, BEETROOT_COLOR, 'beacon_roxo', -80)
 
-  beacons.push(lemonBeacon);
-  beacons.push(candyBeacon);
-  beacons.push(beetrootBeacon);
+  BEACONS.push(lemonBeacon);
+  BEACONS.push(candyBeacon);
+  BEACONS.push(beetrootBeacon);
 }
