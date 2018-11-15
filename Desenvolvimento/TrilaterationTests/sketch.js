@@ -9,19 +9,23 @@ const ROSA = [255, 71, 239]
 const ROXO = [109, 3, 100]
 const AZUL = [35, 97, 255]
 
-let beacons = []
+let beacons = [], MAX_DIST
 let b1, b2, b3
 
 /**
  * Setup program
  */
 function setup() {
-  createCanvas(500, 600)
+  createCanvas(500, 900)
+  textSize(20)
 
   // Create beacons
   b1 = new Beacon('b1', createVector(50, 50), 4, AMARELO)
   b2 = new Beacon('b2', createVector(width-50, 50), 4, ROSA)
   b3 = new Beacon('b3', createVector(width-50, height-50), 4, ROXO)
+
+  MAX_DIST = calcDist(b1.pos.x, b1.pos.y, b3.pos.x, b3.pos.y)
+  console.log(MAX_DIST)
 
   beacons.push(b1)
   beacons.push(b2)
@@ -32,12 +36,9 @@ function setup() {
  * This will loop for ever
  */
 function draw() {
-  background(255);
+  background(255)
   
-  let pos = getTrilateration(b1.pos, b2.pos, b3.pos)
-  console.log("CALC = x: " + pos.x + " - y:" + pos.y)
-  console.log("REAL = x: " + mouseX + " - y:" + mouseY)
-  console.log("")
+  let pos = getTrilateration(b1, b2, b3)
 
   // Draw mouse position
   push()
@@ -53,16 +54,18 @@ function draw() {
   stroke(1)
   fill(0)
   let text1 = 'Calc: ' + pos.x + ', ' + pos.y
-  let text2 = 'Real: ' + mouseX + ', ' + mouseY
+  let text2 = 'Real: ' +round(mouseX) + ', ' + round(mouseY)
   text(nfc(text1), pos.x + 15, pos.y - 5)
   text(nfc(text2), pos.x + 15, pos.y + 15)
   pop()
 
   // Draw beacons
 	for(beacon of beacons) {
-    let p1 = pos
-    let p2 = beacon.pos
-    showDist(p1, p2)
+    beacon.dist = calcDist(beacon.pos.x, beacon.pos.y, mouseX, mouseY)
+    beacon.dist = map(beacon.dist, 0, MAX_DIST, 0, 100)
+    //beacon.dist = map(beacon.dist, 0, 100, 0, MAX_DIST)
+
+    showDist(pos, beacon.pos, beacon.dist)
     line(beacon.pos.x, beacon.pos.y, pos.x, pos.y)
     beacon.show()
   }
@@ -73,23 +76,18 @@ function draw() {
  * Copied from https://gist.github.com/kdzwinel/8235348
  */
 function getTrilateration(position1, position2, position3) {
-  var xa = position1.x
-  var ya = position1.y
+  var xa = position1.pos.x
+  var ya = position1.pos.y
   
-  var xb = position2.x
-  var yb = position2.y
+  var xb = position2.pos.x
+  var yb = position2.pos.y
   
-  var xc = position3.x
-  var yc = position3.y
+  var xc = position3.pos.x
+  var yc = position3.pos.y
   
-  var ra = 100//calcDist(xa, ya, mouseX, mouseY)
-  var rb = 150//calcDist(xb, yb, mouseX, mouseY)
-  var rc = 10//calcDist(xc, yc, mouseX, mouseY)
-
-  // Faz o map
-  ra = map(ra, 0, 100, 0, 471)
-  rb = map(rb, 0, 150, 0, 250)
-  rc = map(rc, 0, 10, 0, 250)
+  var ra = position1.dist //= calcDist(xa, ya, mouseX, mouseY)
+  var rb = position2.dist //= calcDist(xb, yb, mouseX, mouseY)
+  var rc = position3.dist //= calcDist(xc, yc, mouseX, mouseY)
 
   var S = (Math.pow(xc, 2.) - Math.pow(xb, 2.) + Math.pow(yc, 2.) - Math.pow(yb, 2.) + Math.pow(rb, 2.) - Math.pow(rc, 2.)) / 2.0;
   var T = (Math.pow(xa, 2.) - Math.pow(xb, 2.) + Math.pow(ya, 2.) - Math.pow(yb, 2.) + Math.pow(rb, 2.) - Math.pow(ra, 2.)) / 2.0;
@@ -117,11 +115,11 @@ function calcDist(x1, y1, x2, y2) {
 /**
  * Do some magic stuff to print distance on the lines
  */
-function showDist(p1, p2) {
-  let d = calcDist(p1.x, p1.y, p2.x, p2.y);
-  push();
-  stroke(1);
-  translate((p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
-  text(nfc(d, 1), 0, -5);
-  pop();
+function showDist(p1, p2, d) {
+  //let d = calcDist(p1.x, p1.y, p2.x, p2.y)
+  push()
+  stroke(1)
+  translate((p1.x + p2.x) / 2, (p1.y + p2.y) / 2)
+  text(nfc(d, 1), 0, -5)
+  pop()
 }

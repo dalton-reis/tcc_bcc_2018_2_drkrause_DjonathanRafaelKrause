@@ -1,5 +1,5 @@
 ﻿let kalmanFilter
-let BEACONS = []
+let BEACONS = [], MAX_DIST = 0
 let lemonBeacon, candyBeacon, beetrootBeacon
 let receiver, beaconData, isEmptyQueueObj, greaterDistPx, img
 let beaconsAreCalibrated = false, btnGetCalibration
@@ -16,17 +16,35 @@ function setup() {
   initBeacons()
   receiver = new Receiver()
 
-  // Indica se tem ou nao dados para serem consumidos na fila
+  // Será a diagonal entre os dois beacons mais afastados
+  MAX_DIST = round(calcDist(lemonBeacon.pos, beetrootBeacon.pos))
+  console.log('MAX_DIST = ' + MAX_DIST)
+
+  // Indicador de q tem ou nao dados para serem consumidos na fila
   isEmptyQueueObj = {
     pos: createVector(width- 15, 15),
     color: [255, 0, 0],
     isEmpty: true
   }
 
+  // Setupa botão pra resetar a calibração e forçar calibração
   btnGetCalibration = createButton('Resetar Calibração')
   btnGetCalibration.position(width + 15, 10)
   btnGetCalibration.mousePressed(() => { 
     beaconsAreCalibrated = false
+  })
+
+  btnForceCalibration = createButton('Forçar Calibração')
+  btnForceCalibration.position(width + 15, 40)
+  btnForceCalibration.mousePressed(() => {
+    lemonBeacon.maxRSSI = -52
+    lemonBeacon.minRSSI = -101
+    candyBeacon.maxRSSI = -47
+    candyBeacon.minRSSI = -97
+    beetrootBeacon.maxRSSI = -52
+    beetrootBeacon.minRSSI = -99
+
+    beaconsAreCalibrated = true
   })
 }
 
@@ -51,7 +69,7 @@ function draw() {
     text('Os beacons não estão calibrados', width/2, height/2)
   } else {
     getFromQueue()
-    receiver.updateAndShow()
+    //receiver.updateAndShow()
     updateBeacons()
   }
 }
@@ -63,16 +81,12 @@ function updateBeacons() {
 	for(let beacon of BEACONS) {
     // Só atualiza a distância do beacon se houverem dados para consumir na fila
     if (!isEmptyQueueObj.isEmpty) {
-      //console.log(beacon.rssi + ' - ' + beacon.minRSSI + ' - ' + beacon.maxRSSI)
-      beacon.dist = calcDistRSSI(beacon)
-
-      /*
-      if (beacon.id == candyBeacon.id) {
-        receiver.pos.y = map(beacon.dist, 0, 100, candyBeacon.pos.y, beetrootBeacon.pos.y)
-      } else if (beacon.id == lemonBeacon.id) {
-        receiver.pos.x = map(beacon.dist, 0, 100, lemonBeacon.pos.x, candyBeacon.pos.x)
+      if (beacon.name == 'beacon_amarelo') {
+        console.log(beacon.rssi)
       }
-      */
+      //beacon.dist = calcDistRSSI(beacon)
+      beacon.dist = teste(beacon)
+      //beacon.dist = map(beacon.dist, 0, 10, 100, 0)
     }
     
     drawDist(receiver.pos, beacon.pos, beacon.dist)

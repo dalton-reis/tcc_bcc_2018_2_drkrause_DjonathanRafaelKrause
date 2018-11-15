@@ -3,6 +3,9 @@
  * Utiliza trilateração para encontrar a posição atual do receptor
  * Trilateração em JavaScript: https://gist.github.com/kdzwinel/8235348
  * Trilateração: https://en.wikipedia.org/wiki/Trilateration
+ * @param beacon - precisa ter um vetor com posição x, y fixa e um atributo dist 
+ * com a distância entre o beacon e o recepetor
+ * @return - vetor com posição x, y calculada
  */
 function getTrilateration(beacon1, beacon2, beacon3) {
   // Seta vars xy dos beacons a, b e c
@@ -21,16 +24,11 @@ function getTrilateration(beacon1, beacon2, beacon3) {
   let rb = beacon2.dist
   let rc = beacon3.dist
 
-  /*
-  xa = map(xa, 50, width-50, 0, 100)
-  ya = map(ya, 50, height-50, 0, 100)
-
-  xb = map(xb, 50, width-50, 0, 100)
-  yb = map(yb, 50, height-50, 0, 100)
-  
-  xc = map(xc, 50, width-50, 0, 100)
-  yc = map(yc, 50, height-50, 0, 100)
-  */
+  // normaliza distancia, a maior distância sempre vai ser a diagonal
+  ra = round(map(ra, 0, 100, 0, MAX_DIST))
+  rb = round(map(rb, 0, 100, 0, MAX_DIST))
+  rc = round(map(rc, 0, 100, 0, MAX_DIST))
+  console.log(MAX_DIST + ' | ' + ra + ' | ' + rb + ' | ' + rc)
 
   // Faz a matemágica
   var S = (Math.pow(xc, 2.) - Math.pow(xb, 2.) + Math.pow(yc, 2.) - Math.pow(yb, 2.) + Math.pow(rb, 2.) - Math.pow(rc, 2.)) / 2.0
@@ -38,11 +36,43 @@ function getTrilateration(beacon1, beacon2, beacon3) {
   var y = ((T * (xb - xc)) - (S * (xb - xa))) / (((ya - yb) * (xb - xc)) - ((yc - yb) * (xb - xa)))
   var x = ((y * (ya - yb)) - T) / (xb - xa)
 
-  //x = map(x, 0, 100, 50, width-50)
-  //y = map(y, 0, 100, 50, height-50)
-
   // Retorna vetor com x e y calculados
   return createVector(round(x), round(y))
+}
+
+/**
+ * Calcula o percentual de distância entre o beacon e o receptor
+ * 100% será o mais longe possível, 0% o mais perto possível
+ * @param {*} beacon com atributo rssi, minRSSI e maxRSSI
+ */
+function calcDistRSSI(beacon) {
+  return map(beacon.rssi, beacon.minRSSI, beacon.maxRSSI, 100, 0).toFixed(2)
+}
+
+function teste(beacon) {
+  /*
+  let ratio = beacon.rssi*1.0 / beacon.txPower
+  let dist = 0
+
+  if (beacon.rssi == 0) {
+    return -1.0
+  }
+
+  if (ratio < 1.0) {
+    dist = Math.pow(ratio, 10)
+  } else {
+    dist = (0.89976) * Math.pow(ratio, 7.7095) + 0.111
+  }*/
+
+  let A = 0.42093
+  let B = 6.9476
+  let C = 0.54992
+  let r = beacon.rssi
+  let t = beacon.txPower
+
+  let dist = A * Math.pow((r/t), B) + C
+ 
+  return dist
 }
 
 /**
@@ -60,16 +90,6 @@ function calcDist(p1, p2) {
 }
 
 /**
- * 
- * @param {*} beacon 
- */
-function calcDistRSSI(beacon) {
-  if (beacon.name == 'beacon_amarelo') 
-    console.log(beacon.rssi + ' | ' + beacon.minRSSI + ' | ' + beacon.maxRSSI)
-  return map(beacon.rssi, beacon.minRSSI, beacon.maxRSSI, 0, 100).toFixed(2)
-}
-
-/**
  * Desenha distância entre p1 e p2
  * @param p1 vetor com xy do ponto
  * @param p2 vetor com xy do ponto
@@ -83,24 +103,3 @@ function drawDist(p1, p2, dist) {
   pop()
 }
 
-/**
- * Calcula a distância de acordo com o RSSI recebido
- * @param beacon deve ter os atributos RSSI e txPower
- * distance = A × (r / t)^B + C
- */
-function calcDistRSSI_OLD(beacon) {
-  let ratio = beacon.rssi*1.0 / beacon.txPower
-  let dist = 0
-
-  if (beacon.rssi == 0) {
-    return -1.0
-  }
-
-  if (ratio < 1.0) {
-    dist = Math.pow(ratio, 10)
-  } else {
-    dist = (0.89976) * Math.pow(ratio, 7.7095) + 0.111
-  }
-
-  return dist
-}

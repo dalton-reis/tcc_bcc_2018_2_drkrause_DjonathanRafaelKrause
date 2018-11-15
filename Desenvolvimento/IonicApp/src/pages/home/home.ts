@@ -13,6 +13,7 @@ export class HomePage {
   SERVER = "http://192.168.0.64:80/" // CASA
   //SERVER = "http://10.13.20.86:80/" // FURB
 
+  AVG_FILTER_WINDOW: number
   QUEUE_INTERVAL = 500 // 0.5 segundos
   queueInterval: any
   logs: string
@@ -33,19 +34,21 @@ export class HomePage {
 
     this.allBeacons = []
     this.logs = ""
+    this.AVG_FILTER_WINDOW = 50
     
     this.sendToQueue()
-    this.setBeacons()
+    //this.setBeacons()
   }
 
   setBeacons() {
-    let lemonBeacon = new Beacon('D7:80:45:7D:C8:86', 'beacon_amarelo', -78)
-    let candyBeacon = new Beacon('F8:15:B1:06:9B:71', 'beacon_rosa', -77)
-    let beetrootBeacon = new Beacon('CF:43:E0:FA:CE:D2', 'beacon_roxo', -80)
+    this.log('Setando beacons com média móvel de janela de ' + this.AVG_FILTER_WINDOW)
+    let lemonBeacon = new Beacon('D7:80:45:7D:C8:86', 'beacon_amarelo', -78, this.AVG_FILTER_WINDOW)
+    let candyBeacon = new Beacon('F8:15:B1:06:9B:71', 'beacon_rosa', -77, this.AVG_FILTER_WINDOW)
+    let beetrootBeacon = new Beacon('CF:43:E0:FA:CE:D2', 'beacon_roxo', -80, this.AVG_FILTER_WINDOW)
 
-    let miBeacon   = new Beacon('MIBEACON', 'mi_beacon', 0)
-    let genBeacon1 = new Beacon('GEN1', 'gen_beacon_1', 0)
-    let genBeacon2 = new Beacon('GEN2', 'gen_beacon_2', 0)
+    let miBeacon   = new Beacon('MIBEACON', 'mi_beacon', 0, this.AVG_FILTER_WINDOW)
+    let genBeacon1 = new Beacon('GEN1', 'gen_beacon_1', 0, this.AVG_FILTER_WINDOW)
+    let genBeacon2 = new Beacon('GEN2', 'gen_beacon_2', 0, this.AVG_FILTER_WINDOW)
     
     this.validBeacons = []
     this.validBeacons.push(lemonBeacon)
@@ -85,10 +88,12 @@ export class HomePage {
   calibrateBeacon(beacon) {
     this.validBeacons.forEach((b) => {
       if (b.id === beacon.id) {
-        console.log(b.name + ' - ' + beacon.rssi + ' | ' + b.maxRSSI + ' / ' + b.minRSSI)
-        b.setMaxRSSI(beacon.rssi)
-        b.setMinRSSI(beacon.rssi)
+        // Seta o RSSI e aplica o filtro
         b.setRSSI(beacon.rssi)
+        
+        // Seta o valor filtrado como min/max 
+        b.setMaxRSSI(b.filteredRSSI)
+        b.setMinRSSI(b.filteredRSSI)
       }
     })
   }
@@ -169,7 +174,7 @@ export class HomePage {
         }
         
         if (!updated) {
-          let newBeacon = new Beacon(beaconFound.id, beaconFound.id, beaconFound.rssi)
+          let newBeacon = new Beacon(beaconFound.id, beaconFound.id, beaconFound.rssi, this.AVG_FILTER_WINDOW)
           this.allBeacons.push(newBeacon)
         }
       },

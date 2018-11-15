@@ -15,7 +15,19 @@
   </ion-item>
   <br />
 
-  <!-- OPÇÕES -->
+  <!-- PARAMETROS FILTRO -->
+  <ion-item>
+    <ion-label>Valor Janela Filtro</ion-label>
+    <ion-input [(ngModel)]="AVG_FILTER_WINDOW"></ion-input>
+    </ion-item>
+    <ion-row center>  
+      <ion-col text-center>   
+        <button ion-button (click)="setBeacons()"> Filtro OK / Criar beacons </button>
+      </ion-col>
+    </ion-row>
+  <br />
+
+  <!-- OPCOES -->
   <ion-row center>  
     <ion-col text-center>   
         <button [disabled]="calibrating || scanning || scanningAll" *ngIf="!calibrating" ion-button (click)="calibrate()"> Calibrar </button>

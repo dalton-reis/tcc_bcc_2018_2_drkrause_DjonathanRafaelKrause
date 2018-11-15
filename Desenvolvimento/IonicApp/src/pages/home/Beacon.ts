@@ -12,7 +12,7 @@ export class Beacon {
   rssiFilter : MotionAvgFilter
   maxFilter : MotionAvgFilter
   
-  constructor (id, name, txPower) {
+  constructor (id, name, txPower, filterWindow) {
     this.id = id
     this.name = name
     this.txPower = txPower
@@ -20,7 +20,7 @@ export class Beacon {
     this.maxRSSI = -1000
     this.minRSSI = 1000
     this.filteredRSSI = 0
-    this.rssiFilter = new MotionAvgFilter(50)
+    this.rssiFilter = new MotionAvgFilter(filterWindow)
     this.maxFilter = new MotionAvgFilter(3)
   }
 
