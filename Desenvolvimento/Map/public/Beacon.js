@@ -4,6 +4,7 @@ class Beacon {
     this.name = name
     this.txPower = txPower // RSSI médio a 1m
     this.rssi = txPower // Começa com o txPower para não ser 0
+    this.rawRSSI = txPower
     this.maxRSSI = -1000
     this.minRSSI = 1000
     this.dist = 0 

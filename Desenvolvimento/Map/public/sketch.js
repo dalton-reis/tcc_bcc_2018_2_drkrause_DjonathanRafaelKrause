@@ -69,7 +69,7 @@ function draw() {
     text('Os beacons não estão calibrados', width/2, height/2)
   } else {
     getFromQueue()
-    //receiver.updateAndShow()
+    receiver.updateAndShow()
     updateBeacons()
   }
 }
@@ -82,11 +82,10 @@ function updateBeacons() {
     // Só atualiza a distância do beacon se houverem dados para consumir na fila
     if (!isEmptyQueueObj.isEmpty) {
       if (beacon.name == 'beacon_amarelo') {
-        console.log(beacon.rssi)
+        console.log(beacon.rawRSSI + ' | ' + beacon.rssi)
       }
       //beacon.dist = calcDistRSSI(beacon)
-      beacon.dist = teste(beacon)
-      //beacon.dist = map(beacon.dist, 0, 10, 100, 0)
+      beacon.dist = dist1(beacon)
     }
     
     drawDist(receiver.pos, beacon.pos, beacon.dist)

@@ -28,7 +28,6 @@ function getTrilateration(beacon1, beacon2, beacon3) {
   ra = round(map(ra, 0, 100, 0, MAX_DIST))
   rb = round(map(rb, 0, 100, 0, MAX_DIST))
   rc = round(map(rc, 0, 100, 0, MAX_DIST))
-  console.log(MAX_DIST + ' | ' + ra + ' | ' + rb + ' | ' + rc)
 
   // Faz a matemágica
   var S = (Math.pow(xc, 2.) - Math.pow(xb, 2.) + Math.pow(yc, 2.) - Math.pow(yb, 2.) + Math.pow(rb, 2.) - Math.pow(rc, 2.)) / 2.0
@@ -49,30 +48,13 @@ function calcDistRSSI(beacon) {
   return map(beacon.rssi, beacon.minRSSI, beacon.maxRSSI, 100, 0).toFixed(2)
 }
 
-function teste(beacon) {
-  /*
-  let ratio = beacon.rssi*1.0 / beacon.txPower
-  let dist = 0
-
-  if (beacon.rssi == 0) {
-    return -1.0
-  }
-
-  if (ratio < 1.0) {
-    dist = Math.pow(ratio, 10)
-  } else {
-    dist = (0.89976) * Math.pow(ratio, 7.7095) + 0.111
-  }*/
-
+function dist1(beacon) {
   let A = 0.42093
   let B = 6.9476
   let C = 0.54992
   let r = beacon.rssi
   let t = beacon.txPower
-
-  let dist = A * Math.pow((r/t), B) + C
- 
-  return dist
+  return A * Math.pow((r/t), B) + C
 }
 
 /**

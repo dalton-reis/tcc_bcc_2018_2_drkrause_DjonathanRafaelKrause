@@ -24,6 +24,7 @@ function getFromQueue() {
 function setValues(receivedBeacon) {
   for (let i = 0; i < BEACONS.length; i++) {
     if (BEACONS[i].id == receivedBeacon.id) {
+      BEACONS[i].rawRSSI = receivedBeacon.rssi
       BEACONS[i].rssi = receivedBeacon.filteredRSSI
       BEACONS[i].maxRSSI = receivedBeacon.maxRSSI
       BEACONS[i].minRSSI = receivedBeacon.minRSSI
