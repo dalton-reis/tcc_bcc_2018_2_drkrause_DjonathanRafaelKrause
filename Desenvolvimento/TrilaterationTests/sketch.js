@@ -83,9 +83,9 @@ function getTrilateration(position1, position2, position3) {
   var xc = position3.pos.x
   var yc = position3.pos.y
   
-  var ra = position1.dist //= calcDist(xa, ya, mouseX, mouseY)
-  var rb = position2.dist //= calcDist(xb, yb, mouseX, mouseY)
-  var rc = position3.dist //= calcDist(xc, yc, mouseX, mouseY)
+  var ra = position1.dist
+  var rb = position2.dist
+  var rc = position3.dist
 
   var S = (Math.pow(xc, 2.) - Math.pow(xb, 2.) + Math.pow(yc, 2.) - Math.pow(yb, 2.) + Math.pow(rb, 2.) - Math.pow(rc, 2.)) / 2.0;
   var T = (Math.pow(xa, 2.) - Math.pow(xb, 2.) + Math.pow(ya, 2.) - Math.pow(yb, 2.) + Math.pow(rb, 2.) - Math.pow(ra, 2.)) / 2.0;

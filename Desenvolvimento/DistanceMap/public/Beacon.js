@@ -1,37 +1,28 @@
 class Beacon {
-  constructor (id, pos, r, color, name, txPower) {
+  constructor (id, pos, color, name, txPower) {
     this.id = id
     this.name = name
+    this.txPower = txPower // RSSI médio a 1m
     this.rssi = txPower // Começa com o txPower para não ser 0
+    this.rawRSSI = txPower
     this.maxRSSI = -1000
     this.minRSSI = 1000
-    this.pos = pos
-    this.r = r
-    this.color = color
     this.dist = 0 
-    this.txPower = txPower // RSSI médio a 1m
-    this.motionAvgFilter = new MotionAvgFilter(50)
+    this.r = 3
+    this.pos = pos
+    this.color = color
+  }
 
-    // https://www.wouterbulten.nl/blog/tech/lightweight-javascript-library-for-noise-filtering/
-    //this.kalmanFilter = new KalmanFilter({R: 0.01, Q: 3})
+  setMinMaxRSSI(min, max) {
+    this.minRSSI = min
+    this.maxRSSI = max
   }
 
   show () {
     push()
     noStroke()
-    fill(beacon.color)
-    ellipse(beacon.pos.x, beacon.pos.y, beacon.r * 10)
-    pop();
-  }
-
-  setRSSI (newRSSI) {
-    if (!isEmpty(newRSSI)) {
-      this.motionAvgFilter.step(newRSSI)
-      let avgFilter = round(this.motionAvgFilter.currentState()).toFixed(2)
-      this.rssi = avgFilter
-      
-      //let kalman = kalmanFilter.filter(newRSSI).toFixed(2)
-      //console.log(this.name + "\t| RECEBIDO: " + newRSSI + " | KALMAN: " + this.rssi + " | MEDIA: " + avgFilter)
-    }
+    fill(this.color)
+    ellipse(this.pos.x, this.pos.y, this.r * 10)
+    pop()
   }
 }

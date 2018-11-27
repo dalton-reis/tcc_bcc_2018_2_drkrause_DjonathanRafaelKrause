@@ -11,7 +11,7 @@ function setup() {
   frameRate(FRAME_RATE)
   textSize(20)
   textAlign(CENTER)
-  img = loadImage('sala_dalton.png') // sala 5m x 9m
+  img = loadImage('S412.png') // sala 5m x 9m
 
   initBeacons()
   receiver = new Receiver()
@@ -82,10 +82,11 @@ function updateBeacons() {
     // Só atualiza a distância do beacon se houverem dados para consumir na fila
     if (!isEmptyQueueObj.isEmpty) {
       if (beacon.name == 'beacon_amarelo') {
-        console.log(beacon.rawRSSI + ' | ' + beacon.rssi)
+        console.log(d2(beacon) + ' metros')
       }
-      //beacon.dist = calcDistRSSI(beacon)
-      beacon.dist = dist1(beacon)
+      
+      beacon.dist = calcDistRSSI(beacon) // %
+      //beacon.dist = calcDistMeters(beacon) // m
     }
     
     drawDist(receiver.pos, beacon.pos, beacon.dist)

@@ -11,10 +11,6 @@ class Beacon {
     this.r = 3
     this.pos = pos
     this.color = color
-
-    //this.motionAvgFilter = new MotionAvgFilter(50)
-    // https://www.wouterbulten.nl/blog/tech/lightweight-javascript-library-for-noise-filtering/
-    //this.kalmanFilter = new KalmanFilter({R: 0.01, Q: 3})
   }
 
   setMinMaxRSSI(min, max) {

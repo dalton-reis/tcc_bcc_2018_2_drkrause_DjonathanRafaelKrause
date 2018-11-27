@@ -48,13 +48,14 @@ function calcDistRSSI(beacon) {
   return map(beacon.rssi, beacon.minRSSI, beacon.maxRSSI, 100, 0).toFixed(2)
 }
 
-function dist1(beacon) {
-  let A = 0.42093
-  let B = 6.9476
-  let C = 0.54992
-  let r = beacon.rssi
-  let t = beacon.txPower
-  return A * Math.pow((r/t), B) + C
+/**
+ * Calcula a distância em metros
+ * @param {*} beacon 
+ */
+function calcDistMeters(beacon) {
+  var txPower = beacon.txPower 
+  var rssi = beacon.rssi  
+  return Math.pow(10, (txPower - rssi) / 20)
 }
 
 /**

@@ -37,7 +37,7 @@ export class HomePage {
     this.AVG_FILTER_WINDOW = 20
     
     this.sendToQueue()
-    //this.setBeacons()
+    this.setBeacons()
   }
 
   setBeacons() {

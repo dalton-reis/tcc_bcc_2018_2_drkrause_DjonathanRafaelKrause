@@ -22,7 +22,7 @@
     </ion-item>
     <ion-row center>  
       <ion-col text-center>   
-        <button ion-button (click)="setBeacons()"> Filtro OK / Criar beacons </button>
+        <button ion-button (click)="setBeacons()"> Atualizar filtro </button>
       </ion-col>
     </ion-row>
   <br />
@@ -37,7 +37,7 @@
 
   <ion-row center>  
     <ion-col text-center>   
-        <button [disabled]="scanning || !calibrated || calibrating || scanningAll" *ngIf="!scanning" ion-button (click)="scan()"> Procurar Beacons </button>
+        <button [disabled]="scanning || validBeacons == 0 || calibrating || scanningAll" *ngIf="!scanning" ion-button (click)="scan()"> Procurar Beacons </button>
         <button *ngIf="scanning" ion-button (click)="stopScan()"> Parar Scan </button>
     </ion-col>
   </ion-row>
