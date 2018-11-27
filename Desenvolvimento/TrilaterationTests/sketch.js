@@ -62,8 +62,6 @@ function draw() {
   // Draw beacons
 	for(beacon of beacons) {
     beacon.dist = calcDist(beacon.pos.x, beacon.pos.y, mouseX, mouseY)
-    beacon.dist = map(beacon.dist, 0, MAX_DIST, 0, 100)
-    //beacon.dist = map(beacon.dist, 0, 100, 0, MAX_DIST)
 
     showDist(pos, beacon.pos, beacon.dist)
     line(beacon.pos.x, beacon.pos.y, pos.x, pos.y)

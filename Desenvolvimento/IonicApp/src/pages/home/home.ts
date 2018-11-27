@@ -34,7 +34,7 @@ export class HomePage {
 
     this.allBeacons = []
     this.logs = ""
-    this.AVG_FILTER_WINDOW = 50
+    this.AVG_FILTER_WINDOW = 20
     
     this.sendToQueue()
     //this.setBeacons()
