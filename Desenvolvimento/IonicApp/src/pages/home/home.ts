@@ -41,22 +41,28 @@ export class HomePage {
   }
 
   setBeacons() {
-    this.log('Setando beacons com média móvel de janela de ' + this.AVG_FILTER_WINDOW)
+    this.log('Beacons inciados com média móvel com janela = ' + this.AVG_FILTER_WINDOW)
     let lemonBeacon = new Beacon('D7:80:45:7D:C8:86', 'beacon_amarelo', -78, this.AVG_FILTER_WINDOW)
     let candyBeacon = new Beacon('F8:15:B1:06:9B:71', 'beacon_rosa', -77, this.AVG_FILTER_WINDOW)
     let beetrootBeacon = new Beacon('CF:43:E0:FA:CE:D2', 'beacon_roxo', -80, this.AVG_FILTER_WINDOW)
 
-    let miBeacon   = new Beacon('MIBEACON', 'mi_beacon', 0, this.AVG_FILTER_WINDOW)
-    let genBeacon1 = new Beacon('GEN1', 'gen_beacon_1', 0, this.AVG_FILTER_WINDOW)
-    let genBeacon2 = new Beacon('GEN2', 'gen_beacon_2', 0, this.AVG_FILTER_WINDOW)
+    let miBeacon = new Beacon('EC:A6:8C:EE:DE:4B', 'mi_beacon', 0, this.AVG_FILTER_WINDOW)
+    //let genBeacon1 = new Beacon('EC:D1:4E:95:A7:10', 'gen_beacon_1', 0, this.AVG_FILTER_WINDOW)
+    //let genBeacon2 = new Beacon('GEN2', 'gen_beacon_2', 0, this.AVG_FILTER_WINDOW)
     
     this.validBeacons = []
     this.validBeacons.push(lemonBeacon)
     this.validBeacons.push(candyBeacon)
     this.validBeacons.push(beetrootBeacon)
     this.validBeacons.push(miBeacon)
-    this.validBeacons.push(genBeacon1)
-    this.validBeacons.push(genBeacon2)
+    //this.validBeacons.push(genBeacon1)
+    //this.validBeacons.push(genBeacon2)
+  }
+
+  updateFilter() {
+    for (let b of this.validBeacons) {
+      b.rssiFilter.window = this.AVG_FILTER_WINDOW
+    }
   }
 
   /**

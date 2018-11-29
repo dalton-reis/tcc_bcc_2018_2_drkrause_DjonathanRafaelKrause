@@ -1,6 +1,6 @@
 ﻿let kalmanFilter
 let BEACONS = [], MAX_DIST = 0
-let lemonBeacon, candyBeacon, beetrootBeacon
+let lemonBeacon, candyBeacon, beetrootBeacon, miBeacon
 let receiver, beaconData, isEmptyQueueObj, greaterDistPx, img
 let beaconsAreCalibrated = false, btnGetCalibration
 
@@ -52,16 +52,10 @@ function setup() {
 function draw() {
   background(255)
   push()
-  fill(255)
-  stroke(50)
-  rect(50, 50, width-100, height-100)
-  strokeWeight(100)
-  rect(0, 0, width, height)
-  fill(255)
-  strokeWeight(0)
+  image(img, 0, 0)
+  noStroke()
   fill(isEmptyQueueObj.color)
   ellipse(isEmptyQueueObj.pos.x, isEmptyQueueObj.pos.y, 10)
-  image(img, 0, 0)
   pop()
 
   if (!beaconsAreCalibrated) {
@@ -81,12 +75,8 @@ function updateBeacons() {
 	for(let beacon of BEACONS) {
     // Só atualiza a distância do beacon se houverem dados para consumir na fila
     if (!isEmptyQueueObj.isEmpty) {
-      if (beacon.name == 'beacon_amarelo') {
-        console.log(d2(beacon) + ' metros')
-      }
-      
-      beacon.dist = calcDistRSSI(beacon) // %
-      //beacon.dist = calcDistMeters(beacon) // m
+      beacon.dist = calcDistRSSI(beacon)   // Distancia em %
+      //beacon.distMeters = calcDistMeters(beacon) 
     }
     
     drawDist(receiver.pos, beacon.pos, beacon.dist)
@@ -102,8 +92,10 @@ function initBeacons() {
   lemonBeacon = new Beacon('D7:80:45:7D:C8:86', createVector(50, 50), LEMON_COLOR, 'beacon_amarelo', -78)
   candyBeacon = new Beacon('F8:15:B1:06:9B:71', createVector(width-50, 50), CANDY_COLOR, 'beacon_rosa', -77)
   beetrootBeacon = new Beacon('CF:43:E0:FA:CE:D2', createVector(width-50, height-50), BEETROOT_COLOR, 'beacon_roxo', -80)
+  //miBeacon = new Beacon('EC:A6:8C:EE:DE:4B', createVector(width-50, height-50), BEETROOT_COLOR, 'mi_beacon', -80)
 
   BEACONS.push(lemonBeacon)
   BEACONS.push(candyBeacon)
   BEACONS.push(beetrootBeacon)
+  //BEACONS.push(miBeacon)
 }

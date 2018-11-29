@@ -45,7 +45,15 @@ function getTrilateration(beacon1, beacon2, beacon3) {
  * @param {*} beacon com atributo rssi, minRSSI e maxRSSI
  */
 function calcDistRSSI(beacon) {
-  return map(beacon.rssi, beacon.minRSSI, beacon.maxRSSI, 100, 0).toFixed(2)
+  let percDist = map(beacon.rssi, beacon.minRSSI, beacon.maxRSSI, 100, 0).toFixed(2)
+  
+  if (percDist > 100) {
+    percDist = 100
+  } else if (percDist < 0) {
+    percDist = 0
+  }
+
+  return percDist
 }
 
 /**
