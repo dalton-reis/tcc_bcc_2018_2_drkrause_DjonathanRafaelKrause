@@ -77,6 +77,10 @@ function updateBeacons() {
     if (!isEmptyQueueObj.isEmpty) {
       beacon.dist = calcDistRSSI(beacon)   // Distancia em %
       //beacon.distMeters = calcDistMeters(beacon) 
+
+      if (beacon.name == 'beacon_amarelo') {
+        console.log(beacon.rssi)
+      }
     }
     
     drawDist(receiver.pos, beacon.pos, beacon.dist)
