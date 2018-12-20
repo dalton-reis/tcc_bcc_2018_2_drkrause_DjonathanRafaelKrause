@@ -1,6 +1,0 @@
-FootPath is an infrastructureless indoor navigation system for Android phones using only 
-the builtin accelerometer and electronic compass with OpenStreetMap based map data. It was developed by Paul Smith during his bachelor thesis, being advised by Jó Ágila Bitsch and Klaus Wehrle at COMSYS, RWTH Aachen University.
-
-Material usado no TCC do MarcusORocha (2016-1)
-
-Link YouTube: https://www.youtube.com/watch?v=RQhrvT2hUAc&feature=youtu.be&hd=1

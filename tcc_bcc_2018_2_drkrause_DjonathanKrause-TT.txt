@@ -1,0 +1,11 @@
+
+- O aplicativo foi desenvolvido em Ionic e testado apenas em dispositivos Android.
+
+- A pasta AllMaps agrupa todos os mapas desenvolvidos em um só servidor. O servidor foi desenvolvido em NodeJS.
+
+Para iniciar o servidor deve-se seguir os passos a seguir:
+ 1. No cmd ir até a pasta do projeto. Ex.: "cd AllMaps"
+ 2. Iniciar servidor com o comando npm start. Ex.: "npm start"
+
+
+http://odjonathankrause.github.com

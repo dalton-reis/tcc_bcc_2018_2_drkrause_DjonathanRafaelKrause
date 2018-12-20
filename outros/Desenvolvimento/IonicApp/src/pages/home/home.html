@@ -1,0 +1,89 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title> Beacon Scanner </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <!-- SERVIDOR -->
+  <ion-item>
+    <ion-label>Servidor </ion-label>
+    <ion-select [(ngModel)]="SERVER">
+      <ion-option value="http://10.13.20.86:80/">FURB</ion-option>
+      <ion-option value="http://192.168.0.64:80/">AP</ion-option>
+    </ion-select>
+  </ion-item>
+  <br />
+
+  <!-- PARAMETROS FILTRO -->
+  <ion-item>
+    <ion-label>Valor Janela Filtro</ion-label>
+    <ion-input [(ngModel)]="AVG_FILTER_WINDOW"></ion-input>
+    </ion-item>
+    <ion-row center>  
+      <ion-col text-center>   
+        <button ion-button (click)="setBeacons()"> Atualizar filtro </button>
+      </ion-col>
+    </ion-row>
+  <br />
+
+  <!-- OPCOES -->
+  <ion-row center>  
+    <ion-col text-center>   
+        <button [disabled]="calibrating || scanning || scanningAll" *ngIf="!calibrating" ion-button (click)="calibrate()"> Calibrar </button>
+        <button *ngIf="calibrating" ion-button (click)="calibrationComplete()"> Concluir Calibração </button>
+    </ion-col>
+  </ion-row>
+
+  <ion-row center>  
+    <ion-col text-center>   
+        <button [disabled]="scanning || validBeacons == 0 || calibrating || scanningAll" *ngIf="!scanning" ion-button (click)="scan()"> Procurar Beacons </button>
+        <button *ngIf="scanning" ion-button (click)="stopScan()"> Parar Scan </button>
+    </ion-col>
+  </ion-row>
+
+  <ion-row center>  
+    <ion-col text-center>   
+        <button [disabled]="scanning || calibrating" *ngIf="!scanningAll" ion-button (click)="scanAll()"> Procurar Todos Beacons </button>
+        <button *ngIf="scanningAll" ion-button (click)="stopScanAll()"> Parar Scan </button>
+    </ion-col>
+  </ion-row>
+
+  <ion-item-divider></ion-item-divider>
+  
+  <ion-label>Logs:</ion-label>
+  <ion-textarea [(ngModel)]="logs"></ion-textarea>
+
+  <ion-item-divider></ion-item-divider>
+
+  <ion-list *ngIf="calibrating || scanning">
+    <ion-item *ngFor="let beacon of validBeacons">
+      <ion-row justify-content-end>
+        <ion-col col-6>{{beacon.name}}:</ion-col>
+        <ion-col col-6>RSSI: {{beacon.rssi}}dBm</ion-col>
+        <ion-col col-6>RSSI FILTRADO: {{beacon.filteredRSSI}}dBm</ion-col>
+      </ion-row>
+      </ion-item>
+  </ion-list>
+
+  <ion-list *ngIf="scanningAll">
+      <ion-item *ngFor="let beacon of allBeacons">
+        <ion-row justify-content-end>
+          <ion-col col-6>{{beacon.name}}:</ion-col>
+          <ion-col col-6>RSSI: {{beacon.rssi}}dBm</ion-col>
+          <ion-col col-6>FILTRADO: {{beacon.filteredRSSI}}dBm</ion-col>
+        </ion-row>
+        </ion-item>
+    </ion-list>
+
+</ion-content>
+
+
+  <!-- TESTES HTTP 
+  <ion-row center>
+    <ion-col text-center> 
+      <button ion-button (click)="testGet()"> Testar GET </button>
+      <button ion-button (click)="testPost()"> Testar POST </button>
+    </ion-col>
+  </ion-row>
+  -->

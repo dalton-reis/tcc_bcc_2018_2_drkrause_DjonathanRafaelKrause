@@ -1,0 +1,17 @@
+3.2 RSSI
+Explicar oq é o RSSI e os problemas encontrados.
+
+3.  Descrição
+
+3.1 Hardware
+Falar sobre os beacons utilizados e os celulares.
+
+3.3 Coleta de Dados
+Mostrar como o Ionic foi utilizado para efetuar a coleta de dados.
+Como os beacons foram posicionados.
+
+3.4 Arquitetura
+Explicar arquitetura utilizada. Beacon -> Fila -> Server -> Mapa
+
+3.5 Processamento de Dados
+Demonstrar como os dados foram processados. Matemática, trilateração, filtros....
